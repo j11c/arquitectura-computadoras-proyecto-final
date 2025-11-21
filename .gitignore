@@ -1,0 +1,11 @@
+# Archivos de simulación
+*.vcd
+*.cf
+
+# Carpeta de GHDL (común para outputs)
+.ghdl/
+
+# Otros temporales
+*.o
+*.out
+*.ghw
