@@ -98,7 +98,7 @@ architecture arq1 of CPU is
 	component UnidadControl is
 		port(
 			clk : in std_logic;
-			ctrl : out std_logic_vector(19 downto 0);
+			ctrl : out std_logic_vector(19 downto 0)
 		);
 	end component;
 
@@ -106,16 +106,93 @@ architecture arq1 of CPU is
 
 begin
 
-	PC : ProgramCounter port map ();
-	PMA : reg10 port map ();
-	IR : reg10 port map ();
-	A : reg12 port map ();
-	B : reg12 port map ();
-	C : reg12 port map ();
-	D : reg12 port map ();
-	M0 : Mux8_1 port map ();
-	M1 : Mux8_1 port map ();
-	UAL : ALU port map ();
-	CU : UnidadControl port map ();
+	PC : ProgramCounter port map (
+		clk 	 => open,
+		reset 	 => open,
+		enable 	 => open,
+		load 	 => open,
+		jmp_addr => open,
+		pc_out 	 => open
+	);
+
+	PMA : reg10 port map (
+		CLK 	 => open,
+		LOAD 	 => open,
+		dato_in  => open,
+		dato_out => open
+	);
+
+	IR : reg10 port map (
+		CLK 	 => open,
+		LOAD 	 => open,
+		dato_in  => open,
+		dato_out => open
+	);
+
+	A : reg12 port map (
+		CLK 	 => open,
+		LOAD 	 => open,
+		dato_in  => open,
+		dato_out => open
+	);
+
+	B : reg12 port map (
+		CLK 	 => open,
+		LOAD 	 => open,
+		dato_in  => open,
+		dato_out => open
+	);
+
+	C : reg12 port map (
+		CLK 	 => open,
+		LOAD 	 => open,
+		dato_in  => open,
+		dato_out => open
+	);
+
+	D : reg12 port map (
+		CLK 	 => open,
+		LOAD 	 => open,
+		dato_in  => open,
+		dato_out => open
+	);
+
+	M0 : Mux8_1 port map (
+		A0 => open,
+		A1 => open,
+		A2 => open,
+		A3 => open,
+		A4 => open,
+		A5 => open,
+		A6 => open,
+		A7 => open,
+		S  => open
+	);
+
+	M1 : Mux8_1 port map (
+		A0 => open,
+		A1 => open,
+		A2 => open,
+		A3 => open,
+		A4 => open,
+		A5 => open,
+		A6 => open,
+		A7 => open,
+		S  => open
+	);
+
+	UAL : ALU port map (
+		M0 	 => open,
+		M1 	 => open,
+		COOP => open,
+		modo => open,
+		outp => open,
+		NFZF => open
+	);
+
+	CU : UnidadControl port map (
+		clk  => open,
+		ctrl => open
+	);
 
 end arq1;

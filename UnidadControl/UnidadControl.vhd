@@ -17,7 +17,10 @@ use IEEE.std_logic_1164.all;  -- Para std_logic
 use IEEE.numeric_std.all;     -- Para unsigned
 
 entity UnidadControl is
---   port( );
+	port(
+		clk : in std_logic;
+		ctrl : out std_logic_vector(19 downto 0)
+	);
 end UnidadControl;
 
 architecture arq1 of UnidadControl is
