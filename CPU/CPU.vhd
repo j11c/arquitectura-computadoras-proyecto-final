@@ -18,8 +18,13 @@ use IEEE.numeric_std.all;     -- Para unsigned
 
 entity CPU is
 	port(
-		clk	 : in  std_logic;
-		outp : out std_logic_vector(11 downto 0)
+		clk	 	: in  std_logic; 					 -- Reloj general
+		instr 	: in  std_logic_vector(9 downto 0);  -- Instrucción
+		inp 	: in  std_logic_vector(11 downto 0); -- Entrada de datos del exterior
+		PAddr 	: out std_logic_vector(9 downto 0);  -- Dirección de memoria del programa
+		DAddr 	: out std_logic_vector(9 downto 0);  -- Dirección de memoria de datos
+		RW 		: out std_logic_vector; 			 -- Escritura o Lectura Memoria de Datos
+		outp 	: out std_logic_vector(11 downto 0)  -- Salida de datos al exterior
 	);
 end CPU;
 
@@ -90,6 +95,13 @@ architecture arq1 of CPU is
 		);
 	end component;
 
+	component UnidadControl is
+		port(
+			clk : in std_logic;
+			ctrl : out std_logic_vector(19 downto 0);
+		);
+	end component;
+
 	-- Señales
 
 begin
@@ -104,6 +116,6 @@ begin
 	M0 : Mux8_1 port map ();
 	M1 : Mux8_1 port map ();
 	UAL : ALU port map ();
-	-- Unidad de Control
+	CU : UnidadControl port map ();
 
 end arq1;
