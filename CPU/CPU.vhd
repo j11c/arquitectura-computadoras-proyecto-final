@@ -30,7 +30,9 @@ end CPU;
 
 architecture arq1 of CPU is
 
-	-- Componentes Especiales
+	-- ======================
+	-- Componentes Especiales 
+	-- ======================
 
 	component ProgramCounter is
 		port(
@@ -71,7 +73,9 @@ architecture arq1 of CPU is
 		);
 	end component;
 
-	-- Registros
+	-- ======================
+	-- 		 Registros
+	-- ======================
 
 	component reg12 is
 		port( 
@@ -91,7 +95,9 @@ architecture arq1 of CPU is
 		);
 	end component;
 
-	-- Multiplexores
+	-- ======================
+	-- 	    Multiplexores
+	-- ======================
 
 	component Mux8_1 is
 	    port(
@@ -108,141 +114,190 @@ architecture arq1 of CPU is
 		);
 	end component;
 
-	component Mux2_1 is
-	    port(
-			SEL  : in  std_logic;
+	component Mux4_1 is
+		port(
+			SEL  : in  std_logic_vector(1 downto 0);
 			A0   : in  std_logic_vector(11 downto 0);
 			A1   : in  std_logic_vector(11 downto 0);
+			A2   : in  std_logic_vector(11 downto 0);
+			A3   : in  std_logic_vector(11 downto 0);
 			S    : out std_logic_vector(11 downto 0)
 		);
 	end component;
 
-	-- Señales
+	component Mux2_1 is
+	    port(
+			SEL  : in  std_logic;
+			A0   : in  std_logic_vector(9 downto 0);
+			A1   : in  std_logic_vector(9 downto 0);
+			S    : out std_logic_vector(9 downto 0)
+		);
+	end component;
+
+	-- ======================
+	-- 	       Señales
+	-- ======================
+
+	-- Salidas registros 12 bits
+	signal A_out, B_out, C_out, D_out 	: std_logic_vector(11 downto 0) := (others => '0');
+	signal MBR_out 						: std_logic_vector(11 downto 0) := (others => '0');
+
+	-- Salidas registros 10 bits
+	signal PMA_out, IR_out, MAR_out, pc_out : std_logic_vector(9 downto 0);
+
+	-- Salidas multiplexores 12 bits
+	signal M0_out, M1_out, MMBR_out : std_logic_vector(11 downto 0) := (others => '0');
+
+	-- Salidas multiplexores 10 bits
+	signal MMAR_out : std_logic_vector(9 downto 0);
+
+	-- Bus de datos
+	signal data_bus, memory_data, RWIO_out : std_logic_vector(11 downto 0) := (others => '0');
+
+	-- Flag
+	signal NFZF : std_logic_vector(1 downto 0) := (others => '0');
+
+	-- Control: Bus
+	signal control_bus : std_logic_vector(19 downto 0) := (others => '0');
+
+	-- Control: indices de señales
+	constant BIT_RW 	: integer := 0;
+	constant BIT_LDIR 	: integer := 0;
+	constant BIT_LDPC 	: integer := 0;
+	constant BIT_INCPC 	: integer := 0;
+	constant BIT_LDPMA 	: integer := 0;
+	constant BIT_LDMBR 	: integer := 0;
+	constant BIT_LDMAR 	: integer := 0;
+	constant BIT_LDOUT 	: integer := 0;
+	constant BIT_LDA 	: integer := 0;
+	constant BIT_LDB 	: integer := 0;
+	constant BIT_LDC 	: integer := 0;
+	constant BIT_LDD 	: integer := 0;
+	constant BIT_MMAR 	: integer := 0;
+
+	-- Control: multiplexores
+	signal MUX0_SEL, MUX1_SEL, MMBR_SEL : std_logic_vector(2 downto 0) := (others => '0');
 
 begin
 
-	-- Componentes Especiales
+	MUX0_SEL <= "0" & instr(1 downto 0);
+	MUX1_SEL <= "000";
+	MMBR_SEL <= "000";
+
+	-- ======================
+	-- Componentes Especiales 
+	-- ======================
 
 	PC : ProgramCounter port map (
-		clk 	 => open,
-		reset 	 => open,
-		enable 	 => open,
-		load 	 => open,
-		jmp_addr => open,
-		pc_out 	 => open
+		clk 	 => clk,
+		reset 	 => '0',
+		enable 	 => control_bus(BIT_INCPC),
+		load 	 => control_bus(BIT_LDPC), 
+		jmp_addr => instr,
+		pc_out 	 => pc_out
 	);
 
 	CU : UnidadControl port map (
-		clk  => open,
-		ctrl => open
+		clk  => clk,
+		ctrl => control_bus -- señales de control
 	);
 
 	UAL : ALU port map (
-		M0 	 => open,
-		M1 	 => open,
-		COOP => open,
-		modo => open,
-		outp => open,
-		NFZF => open
+		M0 	 => M0_out,
+		M1 	 => M1_out,
+		COOP => IR_out(9 downto 6),
+		modo => IR_out(5 downto 4),
+		outp => data_bus,
+		NFZF => NFZF
 	);
 
 	URWIO : RWIO port map (
-		RW 		=> open,
-		data 	=> open,
-		bus_in 	=> open,
-		bus_out => open
+		RW 		=> control_bus(BIT_RW),
+		data 	=> memory_data,
+		bus_in 	=> data_bus,
+		bus_out => RWIO_out
 	);
 
-	-- Registros
+	-- ======================
+	-- 		 Registros
+	-- ======================
 
 	PMA : reg10 port map (
-		CLK 	 => open,
-		LOAD 	 => open,
-		dato_in  => open,
-		dato_out => open
+		CLK 	 => clk,
+		LOAD 	 => control_bus(BIT_LDPMA),
+		dato_in  => pc_out,
+		dato_out => PMA_out
 	);
 
 	IR : reg10 port map (
-		CLK 	 => open,
-		LOAD 	 => open,
-		dato_in  => open,
-		dato_out => open
+		CLK 	 => clk,
+		LOAD 	 => control_bus(BIT_LDIR),
+		dato_in  => instr,
+		dato_out => IR_out
 	);
 
-	MAR : reg12 port map (
-		CLK 	 => open,
-		LOAD 	 => open,
-		dato_in  => open,
-		dato_out => open
+	MAR : reg10 port map (
+		CLK 	 => clk,
+		LOAD 	 => control_bus(BIT_LDMAR),
+		dato_in  => MMAR_out,
+		dato_out => MAR_out
 	);
 
 	MBR : reg12 port map (
-		CLK 	 => open,
-		LOAD 	 => open,
-		dato_in  => open,
-		dato_out => open
+		CLK 	 => clk,
+		LOAD 	 => control_bus(BIT_LDMBR),
+		dato_in  => MMBR_out,
+		dato_out => MBR_out
 	);
 
 	A : reg12 port map (
-		CLK 	 => open,
-		LOAD 	 => open,
-		dato_in  => open,
-		dato_out => open
+		CLK 	 => clk,
+		LOAD 	 => control_bus(BIT_LDA),
+		dato_in  => data_bus,
+		dato_out => A_out
 	);
 
 	B : reg12 port map (
-		CLK 	 => open,
-		LOAD 	 => open,
-		dato_in  => open,
-		dato_out => open
+		CLK 	 => clk,
+		LOAD 	 => control_bus(BIT_LDB),
+		dato_in  => data_bus,
+		dato_out => B_out
 	);
 
 	C : reg12 port map (
-		CLK 	 => open,
-		LOAD 	 => open,
-		dato_in  => open,
-		dato_out => open
+		CLK 	 => clk,
+		LOAD 	 => control_bus(BIT_LDC),
+		dato_in  => data_bus,
+		dato_out => C_out
 	);
 
 	D : reg12 port map (
-		CLK 	 => open,
-		LOAD 	 => open,
-		dato_in  => open,
-		dato_out => open
-	);
-
-	InReg : reg12 port map (
-		CLK 	 => open,
-		LOAD 	 => open,
-		dato_in  => open,
-		dato_out => open
+		CLK 	 => clk,
+		LOAD 	 => control_bus(BIT_LDD),
+		dato_in  => data_bus,
+		dato_out => D_out
 	);
 
 	OutReg : reg12 port map (
-		CLK 	 => open,
-		LOAD 	 => open,
-		dato_in  => open,
-		dato_out => open
+		CLK 	 => clk,
+		LOAD 	 => control_bus(BIT_LDOUT),
+		dato_in  => data_bus,
+		dato_out => outp
 	);
 
-	-- Multiplexores
-
-	MMBR : Mux2_1 port map (
-		SEL => open,
-		A0  => open,
-		A1  => open,
-		S	=> open
-	);
+	-- ======================
+	-- 	    Multiplexores
+	-- ======================
 
 	MMAR : Mux2_1 port map (
-		SEL => open,
-		A0  => open,
-		A1  => open,
-		S	=> open
+		SEL => control_bus(BIT_MMAR),
+		A0  => instr,
+		A1  => data_bus(9 downto 0),
+		S	=> MMAR_out
 	);
 
-	M0 : Mux8_1 port map (
-		SEL => open,
+	MMBR : Mux8_1 port map (
+		SEL => MMBR_SEL,
 		A0  => open,
 		A1  => open,
 		A2  => open,
@@ -254,17 +309,30 @@ begin
 		S   => open
 	);
 
-	M1 : Mux8_1 port map (
-		SEL => open,
-		A0  => open,
-		A1  => open,
-		A2  => open,
-		A3  => open,
-		A4  => open,
-		A5  => open,
-		A6  => open,
-		A7  => open,
-		S   => open
+	M0 : Mux8_1 port map ( -- Fuente
+		SEL => MUX0_SEL,
+		A0  => A_out,
+		A1  => B_out,
+		A2  => C_out,
+		A3  => D_out,
+		A4  => MBR_out,
+		A5  => x"000",
+		A6  => x"000",
+		A7  => x"000",
+		S   => M0_out
+	);
+
+	M1 : Mux8_1 port map ( -- Destino
+		SEL => MUX1_SEL,
+		A0  => A_out,
+		A1  => B_out,
+		A2  => C_out,
+		A3  => D_out,
+		A4  => x"000",
+		A5  => x"000",
+		A6  => x"000",
+		A7  => x"000",
+		S   => M1_out
 	);
 
 end arq1;
