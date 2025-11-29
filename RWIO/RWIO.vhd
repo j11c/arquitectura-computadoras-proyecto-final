@@ -28,4 +28,14 @@ end RWIO;
 architecture arq1 of RWIO is
 begin
 
+	process(data, RW)
+	begin
+		if RW = '0' then
+			bus_out <= data;
+			data <= (others => 'Z');
+		else
+			data <= bus_in;
+		end if;
+	end process;
+
 end arq1;
