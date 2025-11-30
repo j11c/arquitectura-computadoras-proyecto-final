@@ -179,11 +179,20 @@ architecture arq1 of CPU is
 	-- Control: multiplexores
 	signal MUX0_SEL, MUX1_SEL, MMBR_SEL : std_logic_vector(2 downto 0) := (others => '0');
 
+	-- Control: MMBR para entrada externa
+	signal externalInput : std_logic := '0'; -- se pone en 1 cuando el COOP es IN (11000)
+
 begin
 
+	-- Bit auxiliar para selección MMBR: Activado cuando COOP es IN (11000)
+	with IR_out(9 downto 5) select 
+		externalInput <= '1' when "11000",
+						 '0' when others;
+
+	-- Señales de selección de los multiplexores
 	MUX0_SEL <= IR_out(4) & IR_out(1 downto 0);
 	MUX1_SEL <= "0" & IR_out(3 downto 2);
-	MMBR_SEL <= "000";
+	MMBR_SEL <= "0" & externalInput & IR_out(5);
 
 	-- ======================
 	-- Componentes Especiales 
