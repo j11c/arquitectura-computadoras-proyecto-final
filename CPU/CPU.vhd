@@ -23,7 +23,7 @@ entity CPU is
 		inp 	: in  std_logic_vector(11 downto 0); -- Entrada de datos del exterior
 		PAddr 	: out std_logic_vector(9 downto 0);  -- Dirección de memoria del programa
 		DAddr 	: out std_logic_vector(9 downto 0);  -- Dirección de memoria de datos
-		RW 		: out std_logic_vector; 			 -- Escritura o Lectura Memoria de Datos
+		RW 		: out std_logic; 					 -- Escritura o Lectura Memoria de Datos
 		outp 	: out std_logic_vector(11 downto 0)  -- Salida de datos al exterior
 	);
 end CPU;
@@ -66,7 +66,7 @@ architecture arq1 of CPU is
 
 	component RWIO is
 		port( 
-			RW : in std_logic;
+			RW 		: in std_logic;
 			data 	: inout std_logic_vector(11 downto 0);
 			bus_in 	: in 	std_logic_vector(11 downto 0);
 			bus_out : out 	std_logic_vector(11 downto 0)
