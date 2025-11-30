@@ -174,12 +174,12 @@ architecture arq1 of CPU is
 	constant BIT_LDB 	: integer := 0;
 	constant BIT_LDC 	: integer := 0;
 	constant BIT_LDD 	: integer := 0;
-	constant BIT_MMAR 	: integer := 0;
 
 	-- Control: multiplexores
 	signal MUX0_SEL, MUX1_SEL, MMBR_SEL : std_logic_vector(2 downto 0) := (others => '0');
+	signal MMAR_SEL : std_logic := '0';
 
-	-- Control: MMBR para entrada externa
+	-- Control: Auxiliar MMBR_SEL para entrada externa
 	signal externalInput : std_logic := '0'; -- se pone en 1 cuando el COOP es IN (11000)
 
 begin
@@ -193,6 +193,11 @@ begin
 	MUX0_SEL <= IR_out(4) & IR_out(1 downto 0);
 	MUX1_SEL <= "0" & IR_out(3 downto 2);
 	MMBR_SEL <= "0" & externalInput & IR_out(5);
+	
+	with IR_out(9 downto 6) select
+		MMAR_SEL <= '1' when "1110",
+					'0' when others;
+	
 
 	-- ======================
 	-- Componentes Especiales 
@@ -300,7 +305,7 @@ begin
 	-- ======================
 
 	MMAR : Mux2_1 port map (
-		SEL => control_bus(BIT_MMAR),
+		SEL => MMAR_SEL,
 		A0  => instr,
 		A1  => data_bus(9 downto 0),
 		S	=> MMAR_out
