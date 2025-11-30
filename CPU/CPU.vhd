@@ -181,8 +181,8 @@ architecture arq1 of CPU is
 
 begin
 
-	MUX0_SEL <= "0" & instr(1 downto 0);
-	MUX1_SEL <= "000";
+	MUX0_SEL <= IR_out(4) & IR_out(1 downto 0);
+	MUX1_SEL <= "0" & IR_out(3 downto 2);
 	MMBR_SEL <= "000";
 
 	-- ======================
