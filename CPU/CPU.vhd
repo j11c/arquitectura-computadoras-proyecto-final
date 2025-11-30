@@ -317,9 +317,9 @@ begin
 		A2  => C_out,
 		A3  => D_out,
 		A4  => MBR_out,
-		A5  => x"000",
-		A6  => x"000",
-		A7  => x"000",
+		A5  => MBR_out,
+		A6  => MBR_out,
+		A7  => MBR_out,
 		S   => M0_out
 	);
 
