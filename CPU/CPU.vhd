@@ -18,13 +18,14 @@ use IEEE.numeric_std.all;     -- Para unsigned
 
 entity CPU is
 	port(
-		clk	 	: in  std_logic; 					 -- Reloj general
-		instr 	: in  std_logic_vector(9 downto 0);  -- Instrucción
-		inp 	: in  std_logic_vector(11 downto 0); -- Entrada de datos del exterior
-		PAddr 	: out std_logic_vector(9 downto 0);  -- Dirección de memoria del programa
-		DAddr 	: out std_logic_vector(9 downto 0);  -- Dirección de memoria de datos
-		RW 		: out std_logic; 					 -- Escritura o Lectura Memoria de Datos
-		outp 	: out std_logic_vector(11 downto 0)  -- Salida de datos al exterior
+		clk	 	: in  std_logic; 					 	-- Reloj general
+		instr 	: in  std_logic_vector(9 downto 0);  	-- Instrucción
+		inp 	: in  std_logic_vector(11 downto 0); 	-- Entrada de datos del exterior
+		data	: inout std_logic_vector(11 downto 0); 	-- Salida y entrada de datos memoria
+		PAddr 	: out std_logic_vector(9 downto 0);  	-- Dirección de memoria del programa
+		DAddr 	: out std_logic_vector(9 downto 0);  	-- Dirección de memoria de datos
+		RW 		: out std_logic; 					 	-- Escritura o Lectura Memoria de Datos
+		outp 	: out std_logic_vector(11 downto 0)  	-- Salida de datos al exterior
 	);
 end CPU;
 
