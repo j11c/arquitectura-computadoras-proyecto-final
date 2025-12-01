@@ -27,17 +27,160 @@ end UnidadControl;
 architecture arq1 of UnidadControl is
 
 	-- Estructuras de memorias
-	type memOper2Param is array(0 to 512) of std_logic_vector(19 downto 0);
-	type memOper1Param is array(0 to 512) of std_logic_vector(19 downto 0);
-	type memIndirecto is array(0 to 512) of std_logic_vector(19 downto 0);
+	type memOper2Param is array(0 to 512) of std_logic_vector(15 downto 0);
+	type memOper1Param is array(0 to 512) of std_logic_vector(15 downto 0);
+	type memIndirecto is array(0 to 512) of std_logic_vector(15 downto 0);
 
 	-- Contenidos
-	signal Oper2Param : memOper2Param := (others => x"00000");
+	signal Oper2Param : memOper2Param := (
+		-- MODO 00
+		x"0100", x"0280", x"1008", x"0000", x"0000", x"0000", x"0000", x"0000", -- OPER A, A
+		x"0100", x"0280", x"1008", x"0000", x"0000", x"0000", x"0000", x"0000", -- OPER A, B
+		x"0100", x"0280", x"1008", x"0000", x"0000", x"0000", x"0000", x"0000", -- OPER A, C
+		x"0100", x"0280", x"1008", x"0000", x"0000", x"0000", x"0000", x"0000", -- OPER A, D
+		x"0100", x"0280", x"1004", x"0000", x"0000", x"0000", x"0000", x"0000", -- OPER B, A
+		x"0100", x"0280", x"1004", x"0000", x"0000", x"0000", x"0000", x"0000", -- OPER B, B
+		x"0100", x"0280", x"1004", x"0000", x"0000", x"0000", x"0000", x"0000", -- OPER B, C
+		x"0100", x"0280", x"1004", x"0000", x"0000", x"0000", x"0000", x"0000", -- OPER B, D
+		x"0100", x"0280", x"1002", x"0000", x"0000", x"0000", x"0000", x"0000", -- OPER C, A
+		x"0100", x"0280", x"1002", x"0000", x"0000", x"0000", x"0000", x"0000", -- OPER C, B
+		x"0100", x"0280", x"1002", x"0000", x"0000", x"0000", x"0000", x"0000", -- OPER C, C
+		x"0100", x"0280", x"1002", x"0000", x"0000", x"0000", x"0000", x"0000", -- OPER C, D
+		x"0100", x"0280", x"1001", x"0000", x"0000", x"0000", x"0000", x"0000", -- OPER D, A
+		x"0100", x"0280", x"1001", x"0000", x"0000", x"0000", x"0000", x"0000", -- OPER D, B
+		x"0100", x"0280", x"1001", x"0000", x"0000", x"0000", x"0000", x"0000", -- OPER D, C
+		x"0100", x"0280", x"1001", x"0000", x"0000", x"0000", x"0000", x"0000", -- OPER D, D
+		-- MODO 01
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"1008", x"0000", x"0000", -- OPER A, [DIR]
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"1008", x"0000", x"0000", -- OPER A, [DIR]
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"1008", x"0000", x"0000", -- OPER A, [DIR]
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"1008", x"0000", x"0000", -- OPER A, [DIR]
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"1004", x"0000", x"0000", -- OPER B, [DIR]
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"1004", x"0000", x"0000", -- OPER B, [DIR]
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"1004", x"0000", x"0000", -- OPER B, [DIR]
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"1004", x"0000", x"0000", -- OPER B, [DIR]
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"1002", x"0000", x"0000", -- OPER C, [DIR]
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"1002", x"0000", x"0000", -- OPER C, [DIR]
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"1002", x"0000", x"0000", -- OPER C, [DIR]
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"1002", x"0000", x"0000", -- OPER C, [DIR]
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"1001", x"0000", x"0000", -- OPER D, [DIR]
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"1001", x"0000", x"0000", -- OPER D, [DIR]
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"1001", x"0000", x"0000", -- OPER D, [DIR]
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"1001", x"0000", x"0000", -- OPER D, [DIR]
+		-- MODO 10
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"1010", x"0000", x"0000", -- OPER [DIR], A
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"1010", x"0000", x"0000", -- OPER [DIR], A
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"1010", x"0000", x"0000", -- OPER [DIR], A
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"1010", x"0000", x"0000", -- OPER [DIR], A
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"1010", x"0000", x"0000", -- OPER [DIR], B
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"1010", x"0000", x"0000", -- OPER [DIR], B
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"1010", x"0000", x"0000", -- OPER [DIR], B
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"1010", x"0000", x"0000", -- OPER [DIR], B
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"1010", x"0000", x"0000", -- OPER [DIR], C
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"1010", x"0000", x"0000", -- OPER [DIR], C
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"1010", x"0000", x"0000", -- OPER [DIR], C
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"1010", x"0000", x"0000", -- OPER [DIR], C
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"1010", x"0000", x"0000", -- OPER [DIR], D
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"1010", x"0000", x"0000", -- OPER [DIR], D
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"1010", x"0000", x"0000", -- OPER [DIR], D
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"1010", x"0000", x"0000", -- OPER [DIR], D
+		-- MODO 11
+		x"0100", x"0280", x"0100", x"0240", x"1008", x"0000", x"0000", x"0000", -- OPER A, #num
+		x"0100", x"0280", x"0100", x"0240", x"1008", x"0000", x"0000", x"0000", -- OPER A, #num
+		x"0100", x"0280", x"0100", x"0240", x"1008", x"0000", x"0000", x"0000", -- OPER A, #num
+		x"0100", x"0280", x"0100", x"0240", x"1008", x"0000", x"0000", x"0000", -- OPER A, #num
+		x"0100", x"0280", x"0100", x"0240", x"1004", x"0000", x"0000", x"0000", -- OPER B, #num
+		x"0100", x"0280", x"0100", x"0240", x"1004", x"0000", x"0000", x"0000", -- OPER B, #num
+		x"0100", x"0280", x"0100", x"0240", x"1004", x"0000", x"0000", x"0000", -- OPER B, #num
+		x"0100", x"0280", x"0100", x"0240", x"1004", x"0000", x"0000", x"0000", -- OPER B, #num
+		x"0100", x"0280", x"0100", x"0240", x"1002", x"0000", x"0000", x"0000", -- OPER C, #num
+		x"0100", x"0280", x"0100", x"0240", x"1002", x"0000", x"0000", x"0000", -- OPER C, #num
+		x"0100", x"0280", x"0100", x"0240", x"1002", x"0000", x"0000", x"0000", -- OPER C, #num
+		x"0100", x"0280", x"0100", x"0240", x"1002", x"0000", x"0000", x"0000", -- OPER C, #num
+		x"0100", x"0280", x"0100", x"0240", x"1001", x"0000", x"0000", x"0000", -- OPER D, #num
+		x"0100", x"0280", x"0100", x"0240", x"1001", x"0000", x"0000", x"0000", -- OPER D, #num
+		x"0100", x"0280", x"0100", x"0240", x"1001", x"0000", x"0000", x"0000", -- OPER D, #num
+		x"0100", x"0280", x"0100", x"0240", x"1001", x"0000", x"0000", x"0000", -- OPER D, #num
+		others => x"00000"
+	);
+	
+	signal Comparacion : memOper2Param := (
+		-- MODO 00
+		x"0100", x"0280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", -- OPER A, A
+		x"0100", x"0280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", -- OPER A, B
+		x"0100", x"0280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", -- OPER A, C
+		x"0100", x"0280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", -- OPER A, D
+		x"0100", x"0280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", -- OPER B, A
+		x"0100", x"0280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", -- OPER B, B
+		x"0100", x"0280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", -- OPER B, C
+		x"0100", x"0280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", -- OPER B, D
+		x"0100", x"0280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", -- OPER C, A
+		x"0100", x"0280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", -- OPER C, B
+		x"0100", x"0280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", -- OPER C, C
+		x"0100", x"0280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", -- OPER C, D
+		x"0100", x"0280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", -- OPER D, A
+		x"0100", x"0280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", -- OPER D, B
+		x"0100", x"0280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", -- OPER D, C
+		x"0100", x"0280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", -- OPER D, D
+		-- MODO 01
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"0000", x"0000", x"0000", -- OPER A, [DIR]
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"0000", x"0000", x"0000", -- OPER A, [DIR]
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"0000", x"0000", x"0000", -- OPER A, [DIR]
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"0000", x"0000", x"0000", -- OPER A, [DIR]
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"0000", x"0000", x"0000", -- OPER B, [DIR]
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"0000", x"0000", x"0000", -- OPER B, [DIR]
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"0000", x"0000", x"0000", -- OPER B, [DIR]
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"0000", x"0000", x"0000", -- OPER B, [DIR]
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"0000", x"0000", x"0000", -- OPER C, [DIR]
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"0000", x"0000", x"0000", -- OPER C, [DIR]
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"0000", x"0000", x"0000", -- OPER C, [DIR]
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"0000", x"0000", x"0000", -- OPER C, [DIR]
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"0000", x"0000", x"0000", -- OPER D, [DIR]
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"0000", x"0000", x"0000", -- OPER D, [DIR]
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"0000", x"0000", x"0000", -- OPER D, [DIR]
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"0000", x"0000", x"0000", -- OPER D, [DIR]
+		-- MODO 10
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"0000", x"0000", x"0000", -- OPER [DIR], A
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"0000", x"0000", x"0000", -- OPER [DIR], A
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"0000", x"0000", x"0000", -- OPER [DIR], A
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"0000", x"0000", x"0000", -- OPER [DIR], A
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"0000", x"0000", x"0000", -- OPER [DIR], B
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"0000", x"0000", x"0000", -- OPER [DIR], B
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"0000", x"0000", x"0000", -- OPER [DIR], B
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"0000", x"0000", x"0000", -- OPER [DIR], B
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"0000", x"0000", x"0000", -- OPER [DIR], C
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"0000", x"0000", x"0000", -- OPER [DIR], C
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"0000", x"0000", x"0000", -- OPER [DIR], C
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"0000", x"0000", x"0000", -- OPER [DIR], C
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"0000", x"0000", x"0000", -- OPER [DIR], D
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"0000", x"0000", x"0000", -- OPER [DIR], D
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"0000", x"0000", x"0000", -- OPER [DIR], D
+		x"0100", x"0280", x"0100", x"0220", x"0040", x"0000", x"0000", x"0000", -- OPER [DIR], D
+		-- MODO 11
+		x"0100", x"0280", x"0100", x"0240", x"0000", x"0000", x"0000", x"0000", -- OPER A, #num
+		x"0100", x"0280", x"0100", x"0240", x"0000", x"0000", x"0000", x"0000", -- OPER A, #num
+		x"0100", x"0280", x"0100", x"0240", x"0000", x"0000", x"0000", x"0000", -- OPER A, #num
+		x"0100", x"0280", x"0100", x"0240", x"0000", x"0000", x"0000", x"0000", -- OPER A, #num
+		x"0100", x"0280", x"0100", x"0240", x"0000", x"0000", x"0000", x"0000", -- OPER B, #num
+		x"0100", x"0280", x"0100", x"0240", x"0000", x"0000", x"0000", x"0000", -- OPER B, #num
+		x"0100", x"0280", x"0100", x"0240", x"0000", x"0000", x"0000", x"0000", -- OPER B, #num
+		x"0100", x"0280", x"0100", x"0240", x"0000", x"0000", x"0000", x"0000", -- OPER B, #num
+		x"0100", x"0280", x"0100", x"0240", x"0000", x"0000", x"0000", x"0000", -- OPER C, #num
+		x"0100", x"0280", x"0100", x"0240", x"0000", x"0000", x"0000", x"0000", -- OPER C, #num
+		x"0100", x"0280", x"0100", x"0240", x"0000", x"0000", x"0000", x"0000", -- OPER C, #num
+		x"0100", x"0280", x"0100", x"0240", x"0000", x"0000", x"0000", x"0000", -- OPER C, #num
+		x"0100", x"0280", x"0100", x"0240", x"0000", x"0000", x"0000", x"0000", -- OPER D, #num
+		x"0100", x"0280", x"0100", x"0240", x"0000", x"0000", x"0000", x"0000", -- OPER D, #num
+		x"0100", x"0280", x"0100", x"0240", x"0000", x"0000", x"0000", x"0000", -- OPER D, #num
+		x"0100", x"0280", x"0100", x"0240", x"0000", x"0000", x"0000", x"0000", -- OPER D, #num
+		others => x"00000"
+	);
+
 	signal Saltos 	  : memOper2Param := (others => x"00000");
 	signal Oper1Param : memOper1Param := (others => x"00000");
 	signal Indirecto  : memIndirecto  := (others => x"00000");
 
-	signal control_signals : std_logic_vector(19 downto 0) := (others => '0');
+	signal control_signals : std_logic_vector(15 downto 0) := (others => '0');
 	signal microCounter : unsigned(2 downto 0) := (others => '0');
 	signal addr : std_logic_vector(8 downto 0) := (others => '0');
 	signal coop : std_logic_vector(3 downto 0) := (others => '0');
@@ -48,25 +191,27 @@ begin
 	addr <= instr(5 dwonto 0) & std_logic_vector(microCounter);
 	
 	with coop select control_signals <= 
-		Oper2Param(to_integer(unsigned(addr))) when "0001",
-		Oper2Param(to_integer(unsigned(addr))) when "0010",
-		Oper2Param(to_integer(unsigned(addr))) when "0011",
-		Oper2Param(to_integer(unsigned(addr))) when "0100",
-		Oper2Param(to_integer(unsigned(addr))) when "0101",
-		Oper2Param(to_integer(unsigned(addr))) when "0110",
-		Oper2Param(to_integer(unsigned(addr))) when "1000",
-		Oper2Param(to_integer(unsigned(addr))) when "1001",
-		Oper1Param(to_integer(unsigned(addr))) when "0000",
-		Oper1Param(to_integer(unsigned(addr))) when "0111",
-		Oper1Param(to_integer(unsigned(addr))) when "1010",
-		Oper1Param(to_integer(unsigned(addr))) when "1011",
-		Saltos(to_integer(unsigned(addr))) when "1101",
-		Indirecto(to_integer(unsigned(addr))) when "1110",
+		Oper2Param(to_integer(unsigned(addr))) when "0001", -- ADD
+		Oper2Param(to_integer(unsigned(addr))) when "0010", -- SUB
+		Oper2Param(to_integer(unsigned(addr))) when "0011", -- MUL
+		Oper2Param(to_integer(unsigned(addr))) when "0100", -- DIV
+		Oper2Param(to_integer(unsigned(addr))) when "0101", -- AND
+		Oper2Param(to_integer(unsigned(addr))) when "0110", -- OR
+		Oper2Param(to_integer(unsigned(addr))) when "1001", -- LOAD
+
+		Comparacion(to_integer(unsigned(addr))) when "1000", -- CMP
+--
+--		Oper1Param(to_integer(unsigned(addr))) when "0000", -- HALT
+--		Oper1Param(to_integer(unsigned(addr))) when "0111", -- NOT
+--		Oper1Param(to_integer(unsigned(addr))) when "1010", -- INC/DEC
+--		Oper1Param(to_integer(unsigned(addr))) when "1011", -- SHL/SHR
+--		Saltos(to_integer(unsigned(addr))) when "1101",
+--		Indirecto(to_integer(unsigned(addr))) when "1110",
 		x"00000" when others;
 
 	process (clk, Instr, control_signals, addr)
 	begin
-		ctrl <= control_signals;
+		ctrl <= control_signals(12 downto 0);
 		if rising_edge(clk) then
 			microCounter + 1;
 		end if;
