@@ -30,6 +30,7 @@ end ALU;
 
 architecture arq1 of ALU is
 	signal temp_outp : unsigned(11 downto 0) := (others => '0');
+	signal temp_nfzf : std_logic_vector(1 downto 0) := "00";
 begin
 
 	process(clk)
@@ -37,7 +38,7 @@ begin
 	begin
 		if rising_edge(clk) then
 			case COOP is
-				when x"0" => -- HALT (Parar ejecución)
+				when x"0" => -- HALT (Parar ejecuciï¿½n)
 					-- No hace algo
 
 				when x"1" => -- ADD (Suma)
@@ -46,10 +47,10 @@ begin
 				when x"2" => -- SUB (Resta)
 					temp_outp <= unsigned(M1) - unsigned(M0);
 				
-				when x"3" => -- MUL (Multiplicación)
+				when x"3" => -- MUL (Multiplicaciï¿½n)
 					temp_outp <= unsigned(M1) * unsigned(M0);
 
-				when x"4" => -- DIV (División)
+				when x"4" => -- DIV (Divisiï¿½n)
 					temp_outp <= unsigned(M1) / unsigned(M0);
 
 				when x"5" => -- AND (Bitwise AND)
@@ -62,13 +63,8 @@ begin
 					temp_outp <= unsigned(NOT M1);
 
 				when x"8" => -- CMP (Comparar)
-					if M1 < M0 then
-						NFZF <= "10";
-					elsif M1 = M0 then
-						NFZF <= "01";
-					else
-						NFZF <= "00";
-					end if;
+					-- Las flags se actualizan abajo del case
+					null;
 
 				when x"9" => -- LOAD (Cargar datos)
 					temp_outp <= unsigned(M0);
@@ -102,9 +98,30 @@ begin
 				when others =>
 					-- No hace algo
 			end case;
+			 -- **Actualizar flags para TODAS las operaciones (excepto HALT/JMP/NOP)**
+            if COOP = x"8" then
+                -- CMP: comparar M1 vs M0 (no usa temp_outp)
+                if M1 < M0 then
+                    temp_nfzf <= "10"; -- NF=1, ZF=0
+                elsif M1 = M0 then
+                    temp_nfzf <= "01"; -- NF=0, ZF=1
+                else
+                    temp_nfzf <= "00"; -- NF=0, ZF=0
+                end if;
+            elsif COOP /= x"0" and COOP /= x"C" and COOP /= x"D" and COOP /= x"F" then
+                -- Operaciones que modifican temp_outp (ADD, SUB, MUL, etc.)
+                if temp_outp = 0 then
+                    temp_nfzf <= "01"; -- ZF=1
+                elsif temp_outp(11) = '1' then
+                    temp_nfzf <= "10"; -- NF=1 (negativo en complemento a 2)
+                else
+                    temp_nfzf <= "00"; -- positivo
+                end if;
+            end if;
 		end if;
 	end process;
 
 	outp <= std_logic_vector(temp_outp);
+	NFZF <= temp_nfzf;
 
 end arq1;
