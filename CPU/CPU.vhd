@@ -49,7 +49,7 @@ architecture arq1 of CPU is
 	component UnidadControl is
 		port(
 			clk : in std_logic;
-			ctrl : out std_logic_vector(19 downto 0)
+			ctrl : out std_logic_vector(12 downto 0)
 		);
 	end component;
 
@@ -159,20 +159,20 @@ architecture arq1 of CPU is
 	signal NFZF : std_logic_vector(1 downto 0) := (others => '0');
 
 	-- Control: Bus
-	signal control_bus : std_logic_vector(19 downto 0) := (others => '0');
+	signal control_bus : std_logic_vector(12 downto 0) := (others => '0');
 
 	-- Control: indices de señales
-	constant BIT_RW 	: integer := 0;
-	constant BIT_LDIR 	: integer := 0;
-	constant BIT_LDPC 	: integer := 0;
-	constant BIT_INCPC 	: integer := 0;
-	constant BIT_LDPMA 	: integer := 0;
-	constant BIT_LDMBR 	: integer := 0;
-	constant BIT_LDMAR 	: integer := 0;
-	constant BIT_LDOUT 	: integer := 0;
-	constant BIT_LDA 	: integer := 0;
-	constant BIT_LDB 	: integer := 0;
-	constant BIT_LDC 	: integer := 0;
+	constant BIT_LDOUT 	: integer := 11;
+	constant BIT_LDPC 	: integer := 10;
+	constant BIT_INCPC 	: integer := 9;
+	constant BIT_LDPMA 	: integer := 8;
+	constant BIT_LDIR 	: integer := 7;
+	constant BIT_LDMBR 	: integer := 6;
+	constant BIT_LDMAR 	: integer := 5;
+	constant BIT_RW 	: integer := 4;
+	constant BIT_LDA 	: integer := 3;
+	constant BIT_LDB 	: integer := 2;
+	constant BIT_LDC 	: integer := 1;
 	constant BIT_LDD 	: integer := 0;
 
 	-- Control: multiplexores

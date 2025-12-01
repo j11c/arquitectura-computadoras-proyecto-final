@@ -20,7 +20,7 @@ entity UnidadControl is
 	port(
 		clk 	: in std_logic;
 		instr 	: in std_logic_vector(9 downto 0);
-		ctrl 	: out std_logic_vector(19 downto 0)
+		ctrl 	: out std_logic_vector(12 downto 0)
 	);
 end UnidadControl;
 
