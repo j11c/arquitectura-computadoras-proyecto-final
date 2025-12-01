@@ -84,19 +84,19 @@ begin
 					end if;
 
 				when x"C" => -- in out
-					-- No hace algo
+					temp_outp <= unsigned(M0);
 
 				when x"D" => -- JMP
-					-- No hace algo
+					null;
 
 				when x"E" => -- LOAD INDIRECTO
 					temp_outp <= unsigned(M0); -- Valor viene de memoria
 
 				when x"F" => -- NOP
-					-- No hace algo
+					null;
 
 				when others =>
-					-- No hace algo
+					null;
 			end case;
 			 -- **Actualizar flags para TODAS las operaciones (excepto HALT/JMP/NOP)**
             if COOP = x"8" then
