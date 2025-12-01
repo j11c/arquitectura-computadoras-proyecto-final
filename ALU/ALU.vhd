@@ -93,7 +93,7 @@ begin
 					temp_outp <= unsigned(M0); -- Valor viene de memoria
 
 				when x"F" => -- NOP
-					-- No hace algo
+					null;
 
 				when others =>
 					-- No hace algo
