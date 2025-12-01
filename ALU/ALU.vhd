@@ -38,7 +38,7 @@ begin
 	begin
 		if rising_edge(clk) then
 			case COOP is
-				when x"0" => -- HALT (Parar ejecuci�n)
+				when x"0" => -- HALT (Parar ejecucion)
 					-- No hace algo
 
 				when x"1" => -- ADD (Suma)
@@ -47,10 +47,10 @@ begin
 				when x"2" => -- SUB (Resta)
 					temp_outp <= unsigned(M1) - unsigned(M0);
 				
-				when x"3" => -- MUL (Multiplicaci�n)
+				when x"3" => -- MUL (Multiplicacion)
 					temp_outp <= unsigned(M1) * unsigned(M0);
 
-				when x"4" => -- DIV (Divisi�n)
+				when x"4" => -- DIV (Division)
 					temp_outp <= unsigned(M1) / unsigned(M0);
 
 				when x"5" => -- AND (Bitwise AND)
