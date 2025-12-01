@@ -185,6 +185,9 @@ architecture arq1 of CPU is
 	-- Control: Auxiliar MMBR_SEL para entrada externa
 	signal externalInput : std_logic := '0'; -- se pone en 1 cuando el COOP es IN (11000)
 
+	-- Entrada MMBR: Dato Inmediato
+	signal immediate_input : std_logic_vector(11 downto 0) := (others => '0');
+
 begin
 
 	-- CPU ENABLE/DISABLE
@@ -205,6 +208,8 @@ begin
 		MMAR_SEL <= '1' when "1110",
 					'0' when others;
 	
+	-- Build immediate input
+	immediate_input <= IR_out(1 downto 0) & instr;
 
 	-- ======================
 	-- Componentes Especiales 
@@ -320,15 +325,15 @@ begin
 
 	MMBR : Mux8_1 port map (
 		SEL => MMBR_SEL,
-		A0  => open,
-		A1  => open,
-		A2  => open,
-		A3  => open,
-		A4  => open,
-		A5  => open,
-		A6  => open,
-		A7  => open,
-		S   => open
+		A0  => immediate_input,
+		A1  => RWIO_out,
+		A2  => inp,
+		A3  => x"000",
+		A4  => x"000",
+		A5  => x"000",
+		A6  => x"000",
+		A7  => x"000",
+		S   => MMBR_out
 	);
 
 	M0 : Mux8_1 port map ( -- Fuente
