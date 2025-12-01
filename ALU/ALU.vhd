@@ -84,7 +84,7 @@ begin
 					end if;
 
 				when x"C" => -- in out
-					-- No hace algo
+					temp_outp <= unsigned(M0);
 
 				when x"D" => -- JMP
 					null;
