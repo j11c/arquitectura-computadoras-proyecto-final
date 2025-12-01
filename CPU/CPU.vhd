@@ -157,6 +157,9 @@ architecture arq1 of CPU is
 
 	-- Flag
 	signal NFZF : std_logic_vector(1 downto 0) := (others => '0');
+	
+	-- CPU halt control: Program Counter Enable <= '0' when HALT
+	signal halt, pc_enable : std_logic := '0';
 
 	-- Control: Bus
 	signal control_bus : std_logic_vector(12 downto 0) := (others => '0');
@@ -184,6 +187,10 @@ architecture arq1 of CPU is
 
 begin
 
+	-- CPU ENABLE/DISABLE
+	halt <= '1' when IR_out(9 downto 6) = "0000" else '0';
+	pc_enable <= control_bus(BIT_INCPC) AND NOT(halt);
+
 	-- Bit auxiliar para selección MMBR: Activado cuando COOP es IN (11000)
 	with IR_out(9 downto 5) select 
 		externalInput <= '1' when "11000",
@@ -206,7 +213,7 @@ begin
 	PC : ProgramCounter port map (
 		clk 	 => clk,
 		reset 	 => '0',
-		enable 	 => control_bus(BIT_INCPC),
+		enable 	 => pc_enable,
 		load 	 => control_bus(BIT_LDPC), 
 		jmp_addr => instr,
 		pc_out 	 => pc_out
