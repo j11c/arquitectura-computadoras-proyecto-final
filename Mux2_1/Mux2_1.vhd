@@ -19,9 +19,9 @@ use IEEE.numeric_std.all;     -- Para unsigned
 entity Mux2_1 is
     port(
 		SEL  : in  std_logic;
-        A0   : in  std_logic_vector(11 downto 0);
-        A1   : in  std_logic_vector(11 downto 0);
-        S    : out std_logic_vector(11 downto 0)
+        A0   : in  std_logic_vector(9 downto 0);
+        A1   : in  std_logic_vector(9 downto 0);
+        S    : out std_logic_vector(9 downto 0)
     );
 end Mux2_1;
 

@@ -25,6 +25,7 @@ entity CPU is
 		PAddr 	: out std_logic_vector(9 downto 0);  	-- Dirección de memoria del programa
 		DAddr 	: out std_logic_vector(9 downto 0);  	-- Dirección de memoria de datos
 		RW 		: out std_logic; 					 	-- Escritura o Lectura Memoria de Datos
+		--await	: out std_logic;						-- Awaiting External input
 		outp 	: out std_logic_vector(11 downto 0)  	-- Salida de datos al exterior
 	);
 end CPU;
@@ -48,8 +49,9 @@ architecture arq1 of CPU is
 
 	component UnidadControl is
 		port(
-			clk : in std_logic;
-			ctrl : out std_logic_vector(12 downto 0)
+			clk 	: in std_logic;
+			instr 	: in std_logic_vector(9 downto 0);
+			ctrl 	: out std_logic_vector(12 downto 0)
 		);
 	end component;
 
@@ -226,10 +228,12 @@ begin
 
 	CU : UnidadControl port map (
 		clk  => clk,
+		instr => instr,
 		ctrl => control_bus -- señales de control
 	);
 
 	UAL : ALU port map (
+		clk	 => clk,
 		M0 	 => M0_out,
 		M1 	 => M1_out,
 		COOP => IR_out(9 downto 6),

@@ -26,7 +26,7 @@ entity reg10 is
 end reg10;
 
 architecture arq1 of reg10 is
-	signal temp: std_logic_vector(3 downto 0) := x"0";
+	signal temp: std_logic_vector(9 downto 0) := (others =>'0');
 begin
 
 	process (CLK)

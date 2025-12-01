@@ -28,7 +28,7 @@ end RWIO;
 architecture arq1 of RWIO is
 begin
 
-	process(data, RW)
+	process(data, RW, bus_in)
 	begin
 		if RW = '0' then
 			bus_out <= data;
