@@ -18,7 +18,7 @@ use IEEE.numeric_std.all;     -- Para unsigned
 
 entity computadora_didactica is
 	port( 
-		clk		: in std_logic_vector;
+		clk		: in std_logic;
 		entrada : in std_logic_vector(11 downto 0);
 		salida	: out std_logic_vector(11 downto 0)
 	);
@@ -44,7 +44,7 @@ architecture arq1 of computadora_didactica is
 			addr : in  std_logic_vector(9 downto 0);
 			data : out std_logic_vector(9 downto 0)
 		);
-	end component
+	end component;
 
 	component memoriaDatos is
 		port(
@@ -53,15 +53,15 @@ architecture arq1 of computadora_didactica is
 			addr : in  std_logic_vector(9 downto 0);
 			data : inout std_logic_vector(11 downto 0)
 		);
-	end component
+	end component;
 
 	signal instruction, programAddress, dataAddress : std_logic_vector(9 downto 0) := (others => '0');
 	signal data : std_logic_vector(11 downto 0) := (others => '0');
-	signal dataMemoryRW : std_logic := '0'
+	signal dataMemoryRW : std_logic := '0';
 	
 begin
 
-	U0 : CPU port map 
+	U0 : CPU port map (
 		clk	 	=> clk,
 		instr 	=> instruction,
 		inp 	=> entrada,
