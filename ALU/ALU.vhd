@@ -84,7 +84,11 @@ begin
 					end if;
 
 				when x"C" => -- in out
-					temp_outp <= unsigned(M0);
+					if modo(1) = '0' then
+        				temp_outp <= unsigned(M0); -- IN: leer del puerto de entrada
+    				else
+        				null; -- OUT: solo enviar a puerto de salida
+    				end if;
 
 				when x"D" => -- JMP
 					null;
