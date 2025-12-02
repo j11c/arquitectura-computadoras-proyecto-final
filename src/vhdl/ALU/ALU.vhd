@@ -34,7 +34,26 @@ architecture arq1 of ALU is
 	signal mul_temp : std_logic_vector(23 downto 0) := (others => '0');
 begin
 
-	--mul_temp <= std_logic_vector(
+	mul_temp <= std_logic_vector( unsigned(M1) * unsigned(M0) );
+	
+    with COOP select
+        outp <= M0 when "0000",
+                M0 when "0001",
+                M0 when "0010",
+                M0 when "0011",
+                M0 when "0100",
+                M0 when "0101",
+                M0 when "0110",
+                M0 when "0111",
+                M0 when "1000",
+                M0 when "1001",
+                M0 when "1010",
+                M0 when "1011",
+                M0 when "1100",
+                M0 when "1101",
+                M0 when "1110",
+                M0 when "1111",
+                x"000" when others;
 
 --	process(clk)
 --	   variable mul_temp : std_logic_vector(23 downto 0) := (others => '0');
