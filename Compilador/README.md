@@ -59,45 +59,35 @@ python assembler.py ejemplo_programa.txt programa_compilado.txt
 
 ## Lista de Instrucciones
 
-### Operaciones Aritméticas (2 parámetros)
 - `ADD destino, fuente` - Suma
 - `SUB destino, fuente` - Resta
 - `MUL destino, fuente` - Multiplicación
 - `DIV destino, fuente` - División
 
-### Operaciones Lógicas (2 parámetros)
 - `AND destino, fuente` - AND bitwise
 - `OR destino, fuente` - OR bitwise
 
-### Operaciones Lógicas (1 parámetro)
 - `NOT registro` - NOT bitwise
 
-### Operaciones de Comparación
 - `CMP destino, fuente` - Compara y actualiza flags
 
-### Carga/Almacenamiento
 - `LOAD destino, fuente` - Carga directa
 - `ILOAD destino, [fuente]` - Carga indirecta
 
-### Incremento/Decremento (1 parámetro)
 - `INC registro` - Incrementar
 - `DEC registro` - Decrementar
 
-### Desplazamientos (1 parámetro)
 - `SHL registro` - Shift left
 - `SHR registro` - Shift right
 
-### Entrada/Salida (1 parámetro)
 - `IN registro` - Leer del puerto de entrada
 - `OUT registro` - Escribir al puerto de salida
 
-### Control de Flujo
 - `JMP dirección` - Salto incondicional
 - `JGT dirección` - Saltar si mayor (flags)
 - `JEQ dirección` - Saltar si igual (flags)
 - `JLT dirección` - Saltar si menor (flags)
 
-### Control
 - `HALT` - Detener ejecución
 - `NOP` - No operation
 
