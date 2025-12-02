@@ -142,7 +142,7 @@ architecture arq1 of CPU is
 	-- ======================
 
 	-- Salidas registros 12 bits
-	signal A_out, B_out, C_out, D_out 	: std_logic_vector(11 downto 0) := (others => '0');
+	signal A_out, B_out, C_out, D_out, OutReg_out 	: std_logic_vector(11 downto 0) := (others => '0');
 	signal MBR_out 						: std_logic_vector(11 downto 0) := (others => '0');
 
 	-- Salidas registros 10 bits
@@ -198,7 +198,6 @@ begin
 	-- CPU ENABLE/DISABLE
 	halt <= '1' when IR_out(9 downto 6) = "0000" else '0';
 	pc_enable <= control_bus(BIT_INCPC) AND NOT(halt);
-	halted <= halt;
 
 	-- LDPC Override
 	loadPC <= '1' when IR_out(9 downto 4) = "110100" AND control_bus(BIT_LDPC) = '1' 				 else -- JMP
@@ -223,6 +222,13 @@ begin
 	
 	-- Build immediate input
 	immediate_input <= IR_out(1 downto 0) & instr;
+
+	-- CPU Outputs
+	pAddr <= PMA_out;
+	DAddr <= MAR_out;
+	RW <= control_bus(BIT_RW);
+	halted <= halt;
+	outp <= OutReg_out;
 
 	-- ======================
 	-- Componentes Especiales 
@@ -323,7 +329,7 @@ begin
 		CLK 	 => clk,
 		LOAD 	 => control_bus(BIT_LDOUT),
 		dato_in  => data_bus,
-		dato_out => outp
+		dato_out => OutReg_out
 	);
 
 	-- ======================
