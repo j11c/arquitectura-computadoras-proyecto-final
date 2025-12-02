@@ -31,6 +31,6 @@ begin
 	with SEL select
 		S <= A0 when '0',
 			 A1 when '1',	
-			 x"000" when others;
+			 "0000000000" when others;
 
 end arq1;

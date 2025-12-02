@@ -508,7 +508,7 @@ begin
 	addr <= instr(5 downto 0) & std_logic_vector(microCounter);
 	
 	with coop select control_signals <= 
-		HALTNOP(to_integer(unsigned(addr))) 	when "0001",	-- HALT
+		HALTNOP(to_integer(unsigned(addr))) 	when "0000",	-- HALT/NOP
 		Oper2Param(to_integer(unsigned(addr))) 	when "0001", 	-- ADD
 		Oper2Param(to_integer(unsigned(addr))) 	when "0010", 	-- SUB
 		Oper2Param(to_integer(unsigned(addr))) 	when "0011", 	-- MUL
@@ -523,10 +523,9 @@ begin
 		EntradaYSalida(to_integer(unsigned(addr))) when "1100", -- IN/OUT
 		Saltos(to_integer(unsigned(addr))) 		when "1101",	-- JMP/JLT/JGT/JEQ
 		Indirecto(to_integer(unsigned(addr))) 	when "1110",	-- ILOAD
-		HALTNOP(to_integer(unsigned(addr))) 	when "0001",	-- NOP
 		x"0000" when others;
 
-	process (clk, Instr, control_signals, addr)
+	process (clk, instr, control_signals, addr)
 	begin
 		ctrl <= control_signals(12 downto 0);
 		if rising_edge(clk) then
