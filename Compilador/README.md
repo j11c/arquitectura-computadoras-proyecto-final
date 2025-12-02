@@ -3,7 +3,7 @@
 ## Uso
 
 ```bash
-python assembler.py <archivo_entrada.txt> [archivo_salida.txt]
+python assembler.py archivo_entrada.txt archivo_salida.txt
 ```
 
 **Ejemplo:**
