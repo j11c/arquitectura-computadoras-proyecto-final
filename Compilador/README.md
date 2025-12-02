@@ -1,7 +1,5 @@
 # Compilador/Ensamblador para CPU
 
-Este compilador convierte instrucciones en texto a código binario en formato VHDL.
-
 ## Uso
 
 ```bash
@@ -111,8 +109,3 @@ El programa genera código binario en formato VHDL listo para copiar y pegar:
 "1001110010", -- linea 1 / direccion 0
 "1001010100", -- linea 2 / direccion 1
 ...
-```
-
-Cada línea contiene:
-- 10 bits en formato binario
-- Comentario con número de línea y dirección
