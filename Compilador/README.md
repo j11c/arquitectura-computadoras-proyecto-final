@@ -13,8 +13,6 @@ python assembler.py ejemplo_programa.txt programa_compilado.txt
 
 ## Formato de Instrucciones
 
-### Tres formatos soportados:
-
 1. **COOP destino, fuente** (2 operandos)
    ```
    ADD A, B
@@ -38,15 +36,12 @@ python assembler.py ejemplo_programa.txt programa_compilado.txt
 
 ### Registros
 - `A`, `B`, `C`, `D`
-- Ejemplo: `ADD A, B`
 
 ### Dirección de Memoria (Hexadecimal)
 - Formato: `0x000` a `0x3FF`
-- Ejemplo: `LOAD A, 0x100`
 
 ### Inmediato
 - Formato: `#0` a `#4095`
-- Ejemplo: `LOAD A, #255`
 
 ## Modos de Direccionamiento
 
