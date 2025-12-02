@@ -57,7 +57,6 @@ architecture arq1 of CPU is
 
 	component ALU is
 		port(
-			clk  : in  std_logic;
 			M0 	 : in  std_logic_vector(11 downto 0); -- Fuente
 			M1 	 : in  std_logic_vector(11 downto 0); -- Destino
 			COOP : in  std_logic_vector(3 downto 0);
@@ -233,7 +232,6 @@ begin
 	);
 
 	UAL : ALU port map (
-		clk	 => clk,
 		M0 	 => M0_out,
 		M1 	 => M1_out,
 		COOP => IR_out(9 downto 6),
