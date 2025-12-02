@@ -20,7 +20,8 @@ entity computadora_didactica is
 	port( 
 		clk		: in std_logic;
 		entrada : in std_logic_vector(11 downto 0);
-		salida	: out std_logic_vector(11 downto 0)
+		salida	: out std_logic_vector(11 downto 0);
+		halted	: out std_logic
 	);
 end computadora_didactica;
 
@@ -34,7 +35,9 @@ architecture arq1 of computadora_didactica is
 			data	: inout std_logic_vector(11 downto 0); 	-- Salida y entrada de datos memoria
 			PAddr 	: out std_logic_vector(9 downto 0);  	-- Dirección de memoria del programa
 			DAddr 	: out std_logic_vector(9 downto 0);  	-- Dirección de memoria de datos
-			RW 		: out std_logic;		 			 	-- Escritura o Lectura Memoria de Datos
+			RW 		: out std_logic; 					 	-- Escritura o Lectura Memoria de Datos
+			--await	: out std_logic;						-- Awaiting External input
+			halted	: out std_logic;						-- Signals when CPU is halted
 			outp 	: out std_logic_vector(11 downto 0)  	-- Salida de datos al exterior
 		);
 	end component;
@@ -69,6 +72,7 @@ begin
 		PAddr 	=> programAddress,
 		DAddr 	=> dataAddress,
 		RW 		=> dataMemoryRW,
+		halted	=> halted,
 		outp 	=> salida
 	);
 

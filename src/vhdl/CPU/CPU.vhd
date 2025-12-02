@@ -26,6 +26,7 @@ entity CPU is
 		DAddr 	: out std_logic_vector(9 downto 0);  	-- Dirección de memoria de datos
 		RW 		: out std_logic; 					 	-- Escritura o Lectura Memoria de Datos
 		--await	: out std_logic;						-- Awaiting External input
+		halted	: out std_logic;						-- Signals when CPU is halted
 		outp 	: out std_logic_vector(11 downto 0)  	-- Salida de datos al exterior
 	);
 end CPU;
@@ -197,6 +198,7 @@ begin
 	-- CPU ENABLE/DISABLE
 	halt <= '1' when IR_out(9 downto 6) = "0000" else '0';
 	pc_enable <= control_bus(BIT_INCPC) AND NOT(halt);
+	halted <= halt;
 
 	-- LDPC Override
 	loadPC <= '1' when IR_out(9 downto 4) = "110100" AND control_bus(BIT_LDPC) = '1' 				 else -- JMP
@@ -284,7 +286,7 @@ begin
 
 	MBR : reg12 port map (
 		CLK 	 => clk,
-		LOAD 	 => control_bus(BIT_LDMBR),
+		LOAD 	 => control_bus(BIT_LDMBR), -- Falta cambiar esta señal y modificar la unidad de control para que espere una entrada (que sea diferente de x"FFF")
 		dato_in  => MMBR_out,
 		dato_out => MBR_out
 	);
