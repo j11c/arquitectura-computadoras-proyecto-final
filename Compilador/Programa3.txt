@@ -1,0 +1,25 @@
+-- Programa 3: Incrementos, Decrementos y Shifts
+-- Prueba: INC, DEC, SHL, SHR
+
+-- Incremento
+LOAD A, #5       -- A = 5
+INC A            -- A = A + 1 = 6
+OUT A            -- Salida: 6
+
+-- Decremento
+LOAD B, #10      -- B = 10
+DEC B            -- B = B - 1 = 9
+OUT B            -- Salida: 9
+
+-- Shift Left (multiplicar por 2)
+LOAD C, #4       -- C = 4   (0000 0100)
+SHL C            -- C = C << 1 = 8 (0000 1000)
+OUT C            -- Salida: 8
+
+-- Shift Right (dividir por 2)
+LOAD D, #16      -- D = 16  (0001 0000)
+SHR D            -- D = D >> 1 = 8 (0000 1000)
+OUT D            -- Salida: 8
+
+HALT
+NOP

@@ -1,0 +1,43 @@
+-- Programa 5: Acceso a Memoria
+-- Prueba: reg ← mem (modo 01), mem ← reg (modo 10)
+
+-- Guardar valores en memoria (LOAD mem, reg - modo 10)
+LOAD A, #100     -- A = 100
+LOAD 0x010, A    -- Memoria[16] = A = 100
+
+LOAD B, #200     -- B = 200
+LOAD 0x020, B    -- Memoria[32] = B = 200
+
+LOAD C, #42      -- C = 42
+LOAD 0x030, C    -- Memoria[48] = C = 42
+
+-- Leer valores de memoria (LOAD reg, mem - modo 01)
+LOAD A, 0x020    -- A = Memoria[32] = 200
+OUT A            -- Salida: 200
+
+LOAD B, 0x010    -- B = Memoria[16] = 100
+OUT B            -- Salida: 100
+
+LOAD D, 0x030    -- D = Memoria[48] = 42
+OUT D            -- Salida: 42
+
+-- Operación compleja: cargar, modificar, guardar
+LOAD A, 0x010    -- A = Memoria[16] = 100
+LOAD B, #50      -- B = 50
+ADD A, B         -- A = 100 + 50 = 150
+LOAD 0x010, A    -- Memoria[16] = A = 150 (actualizar)
+
+LOAD C, 0x010    -- C = Memoria[16] = 150
+OUT C            -- Salida: 150
+
+-- Prueba ILOAD (Load Indirecto)
+LOAD A, #16      -- A = 16 (dirección)
+ILOAD B, A       -- B = Memoria[A] = Memoria[16] = 150
+OUT B            -- Salida: 150
+
+LOAD D, #32      -- D = 32 (dirección)
+ILOAD C, D       -- C = Memoria[D] = Memoria[32] = 200
+OUT C            -- Salida: 200
+
+HALT
+NOP
