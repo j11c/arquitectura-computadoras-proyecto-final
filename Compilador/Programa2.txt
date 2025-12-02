@@ -1,0 +1,31 @@
+-- Programa 2: Operaciones Lógicas y Comparación
+-- Prueba: AND, OR, NOT, CMP
+
+-- AND
+LOAD A, #15      -- A = 15  (0000 1111)
+LOAD B, #7       -- B = 7   (0000 0111)
+AND A, B         -- A = A AND B = 7 (0000 0111)
+OUT A            -- Salida: 7
+
+-- OR
+LOAD A, #8       -- A = 8   (0000 1000)
+LOAD B, #4       -- B = 4   (0000 0100)
+OR A, B          -- A = A OR B = 12 (0000 1100)
+OUT A            -- Salida: 12
+
+-- NOT
+LOAD A, #15      -- A = 15  (0000 0000 1111)
+NOT A            -- A = NOT A = 4080 (1111 1111 0000)
+OUT A            -- Salida: 4080
+
+-- Comparación (actualiza flags NFZF)
+LOAD A, #10      -- A = 10
+LOAD B, #10      -- B = 10
+CMP A, B         -- Compara A vs B (iguales, ZF=1)
+
+LOAD C, #20      -- C = 20
+LOAD D, #5       -- D = 5
+CMP C, D         -- Compara C vs D (C > D, positivo)
+
+HALT
+NOP

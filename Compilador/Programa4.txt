@@ -1,0 +1,17 @@
+-- Programa 4: Control de Flujo, I/O y Saltos
+-- Prueba: IN, OUT, HALT, NOP
+
+-- Entrada/Salida
+IN A             -- Leer del puerto de entrada a A
+OUT A            -- Escribir A al puerto de salida
+
+LOAD B, #42      -- B = 42
+OUT B            -- Salida: 42
+
+-- No Operation
+NOP
+NOP
+NOP
+
+-- Detener ejecución
+HALT

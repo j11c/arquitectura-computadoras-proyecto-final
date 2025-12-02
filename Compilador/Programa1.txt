@@ -1,0 +1,29 @@
+-- Programa 1: Operaciones Aritméticas
+-- Prueba: ADD, SUB, MUL, DIV
+
+-- Suma
+LOAD A, #10      -- A = 10
+LOAD B, #20      -- B = 20
+ADD A, B         -- A = A + B = 30
+OUT A            -- Salida: 30
+
+-- Resta
+LOAD A, #50      -- A = 50
+LOAD B, #15      -- B = 15
+SUB A, B         -- A = A - B = 35
+OUT A            -- Salida: 35
+
+-- Multiplicación
+LOAD A, #6       -- A = 6
+LOAD B, #7       -- B = 7
+MUL A, B         -- A = A * B = 42
+OUT A            -- Salida: 42
+
+-- División
+LOAD A, #100     -- A = 100
+LOAD B, #5       -- B = 5
+DIV A, B         -- A = A / B = 20
+OUT A            -- Salida: 20
+
+HALT
+NOP
