@@ -189,11 +189,21 @@ architecture arq1 of CPU is
 	-- Entrada MMBR: Dato Inmediato
 	signal immediate_input : std_logic_vector(11 downto 0) := (others => '0');
 
+	-- LDPC Override signal
+	signal loadPC : std_logic := '0';
+
 begin
 
 	-- CPU ENABLE/DISABLE
 	halt <= '1' when IR_out(9 downto 6) = "0000" else '0';
 	pc_enable <= control_bus(BIT_INCPC) AND NOT(halt);
+
+	-- LDPC Override
+	loadPC <= '1' when IR_out(9 downto 4) = "110100" AND control_bus(BIT_LDPC) = '1' 				 else -- JMP
+			  '1' when IR_out(9 downto 4) = "110101" AND NFZF = "10" AND control_bus(BIT_LDPC) = '1' else -- JLT
+			  '1' when IR_out(9 downto 4) = "110110" AND NFZF = "00" AND control_bus(BIT_LDPC) = '1' else -- JGT
+			  '1' when IR_out(9 downto 4) = "110111" AND NFZF = "01" AND control_bus(BIT_LDPC) = '1' else -- JEQ
+			  '0';
 
 	-- Bit auxiliar para selección MMBR: Activado cuando COOP es IN (11000)
 	with IR_out(9 downto 5) select 
@@ -220,7 +230,7 @@ begin
 		clk 	 => clk,
 		reset 	 => '0',
 		enable 	 => pc_enable,
-		load 	 => control_bus(BIT_LDPC), 
+		load 	 => loadPC, 
 		jmp_addr => instr,
 		pc_out 	 => pc_out
 	);
