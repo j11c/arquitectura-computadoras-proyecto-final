@@ -18,7 +18,6 @@ use IEEE.numeric_std.all;     -- Para unsigned
 
 entity ALU is
 	port(
-		clk  : in  std_logic;
 		M0 	 : in  std_logic_vector(11 downto 0); -- Fuente
 		M1 	 : in  std_logic_vector(11 downto 0); -- Destino
 		COOP : in  std_logic_vector(3 downto 0);
@@ -58,8 +57,8 @@ begin
                 	unsigned(M0) 				when "1100", -- IN/OUT
                 	x"000" 						when "1101", -- JMP/JLT/JGT/JEQ
                 	unsigned(M0) 				when "1110", -- ILOAD
-                	x"000" when "1111", -- NOP
-                	x"000" when others;
+                	x"000" 						when "1111", -- NOP
+                	x"000" 						when others;
 
 	NFZF <= "01" when temp_outp = x"000"  else -- NF=0, ZF=1
 				 "10" when temp_outp(11) = '1' else -- NF=1, ZF=0
