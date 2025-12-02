@@ -1,14 +1,9 @@
-# Compilador/Ensamblador para CPU
+# CPU
 
 ## Uso
 
 ```bash
 python assembler.py archivo_entrada.txt archivo_salida.txt
-```
-
-**Ejemplo:**
-```bash
-python assembler.py ejemplo_programa.txt programa_compilado.txt
 ```
 
 ## Formato de Instrucciones
