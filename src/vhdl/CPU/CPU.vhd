@@ -196,7 +196,7 @@ architecture arq1 of CPU is
 	signal loadPC : std_logic := '0';
 	
 	-- RWIO
-	signal rwio_din, rwio_dout : std_logic_vector(11 downto 0) := (others => '0');
+	signal rwio_dout : std_logic_vector(11 downto 0) := (others => '0');
 
 begin
 
@@ -231,7 +231,6 @@ begin
 	-- CPU Outputs
 	pAddr <= PMA_out;
 	DAddr <= MAR_out;
-	rwio_din <= data_in;
 	data_out <= rwio_dout;
 	RW <= control_bus(BIT_RW);
 	halted <= halt;
@@ -267,7 +266,7 @@ begin
 
 	URWIO : RWIO port map (
 		RW 		=> control_bus(BIT_RW),
-		din     => rwio_din,
+		din     => data_in,
 		dout 	=> rwio_dout, -- memory_data,
 		bus_in 	=> data_bus,
 		bus_out => RWIO_out
