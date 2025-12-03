@@ -1,0 +1,83 @@
+-- Programa 8: Serie de Fibonacci
+-- Calcula el N-ésimo número de Fibonacci
+-- Fib(0) = 0, Fib(1) = 1, Fib(n) = Fib(n-1) + Fib(n-2)
+
+-- ========================================
+-- Configuración: N = 10 (calcular Fib(10))
+-- ========================================
+LOAD A, #10      -- Dir 0x000-0x001: A = N = 10
+
+-- ========================================
+-- Casos especiales: Fib(0) = 0, Fib(1) = 1
+-- ========================================
+LOAD B, #0       -- Dir 0x002-0x003: B = 0 (comparador)
+CMP A, B         -- Dir 0x004: Compara N vs 0
+JEQ 0x02F        -- Dir 0x005-0x006: Si N == 0, salta a salida (resultado = 0)
+
+LOAD B, #1       -- Dir 0x007-0x008: B = 1 (comparador)
+CMP A, B         -- Dir 0x009: Compara N vs 1
+JEQ 0x032        -- Dir 0x00A-0x00B: Si N == 1, salta a salida (resultado = 1)
+
+-- ========================================
+-- Inicialización para N >= 2
+-- ========================================
+LOAD B, #0       -- Dir 0x00C-0x00D: B = fib(n-2) = 0
+LOAD C, #1       -- Dir 0x00E-0x00F: C = fib(n-1) = 1
+LOAD D, #2       -- Dir 0x010-0x011: D = contador = 2
+
+-- ========================================
+-- Loop: Calcular Fibonacci iterativamente
+-- Loop comienza en Dir 0x012
+-- ========================================
+-- Calcular fib(n) = fib(n-1) + fib(n-2)
+ADD B, C         -- Dir 0x012: B = fib(n-2) + fib(n-1) = nuevo fib(n)
+
+-- Guardar B temporalmente en memoria[0x100]
+LOAD 0x100, B    -- Dir 0x013-0x014: Memoria[256] = nuevo fib(n)
+
+-- Actualizar: fib(n-2) = fib(n-1)
+LOAD B, C        -- Dir 0x015: B = C (ahora B es el anterior fib(n-1))
+
+-- Actualizar: fib(n-1) = nuevo fib(n)
+LOAD C, 0x100    -- Dir 0x016-0x017: C = Memoria[256] (ahora C es el nuevo fib(n))
+
+-- Incrementar contador
+INC D            -- Dir 0x018: D = D + 1
+
+-- Verificar si ya llegamos a N
+CMP D, A         -- Dir 0x019: Compara contador vs N
+JLT 0x012        -- Dir 0x01A-0x01B: Si contador < N, repetir loop
+
+-- ========================================
+-- Resultado final: C contiene Fib(N)
+-- ========================================
+JMP 0x035        -- Dir 0x01C-0x01D: Salta a mostrar resultado final
+
+-- ========================================
+-- Salida especial: Fib(0) = 0
+-- ========================================
+LOAD C, #0       -- Dir 0x01E-0x01F: C = 0 (no se usa, dir 0x01E)
+LOAD C, #0       -- Dir 0x020-0x021: C = 0 (no se usa, dir 0x020)
+LOAD C, #0       -- Dir 0x022-0x023: C = 0 (no se usa, dir 0x022)
+LOAD C, #0       -- Dir 0x024-0x025: C = 0 (no se usa, dir 0x024)
+LOAD C, #0       -- Dir 0x026-0x027: C = 0 (no se usa, dir 0x026)
+LOAD C, #0       -- Dir 0x028-0x029: C = 0 (no se usa, dir 0x028)
+LOAD C, #0       -- Dir 0x02A-0x02B: C = 0 (no se usa, dir 0x02A)
+LOAD C, #0       -- Dir 0x02C-0x02D: C = 0 (no se usa, dir 0x02C)
+NOP              -- Dir 0x02E: Padding
+LOAD C, #0       -- Dir 0x02F-0x030: C = 0 (Fib(0))
+JMP 0x035        -- Dir 0x031-0x032: Salta a salida
+
+-- Salida especial: Fib(1) = 1
+LOAD C, #1       -- Dir 0x033-0x034: C = 1 (Fib(1))
+
+-- ========================================
+-- Mostrar resultado
+-- ========================================
+OUT C            -- Dir 0x035: Salida = Fib(N)
+
+-- ========================================
+-- Fin del programa
+-- ========================================
+HALT             -- Dir 0x036
+NOP              -- Dir 0x037
