@@ -1,0 +1,3 @@
+LOAD A, #5
+OUT A
+HALT

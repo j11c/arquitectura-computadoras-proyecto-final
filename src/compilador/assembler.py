@@ -184,7 +184,7 @@ def assemble_instruction(line, line_num):
                 raise ValueError(f"Línea {line_num}: JMP requiere dirección de memoria (0x...)")
         elif dest_type == 'reg':
             # NOT, INC, DEC, IN, OUT
-            instruction = coop + modo + dest_val + '00'
+            instruction = coop + modo + dest_val + dest_val
             instructions.append(instruction)
         else:
             raise ValueError(f"Línea {line_num}: Formato inválido para {mnemonic}")

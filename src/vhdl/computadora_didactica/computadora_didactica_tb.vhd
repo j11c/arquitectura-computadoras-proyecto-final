@@ -82,7 +82,7 @@ begin
 
    -- Test case 1
    -- ... Asignaciones a seniales de entrada ...
-   wait for 1000 ns;
+   wait for 3000 ns;
    -- assert (<condition>) report "Error case 1" severity error;
 
    -- Test case 2
