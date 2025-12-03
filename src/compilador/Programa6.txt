@@ -1,0 +1,42 @@
+-- Programa de Prueba: Números Negativos en Complemento a 2
+-- Prueba: Inmediatos negativos
+
+-- Cargar números negativos
+LOAD A, #-1      -- A = -1 (111111111111 en complemento a 2)
+OUT A            -- Salida: -1
+
+LOAD B, #-10     -- B = -10 (111111110110 en complemento a 2)
+OUT B            -- Salida: -10
+
+LOAD C, #-100    -- C = -100
+OUT C            -- Salida: -100
+
+-- Operaciones con negativos
+LOAD A, #5       -- A = 5
+LOAD B, #-3      -- B = -3
+ADD A, B         -- A = 5 + (-3) = 2
+OUT A            -- Salida: 2
+
+LOAD A, #10      -- A = 10
+LOAD B, #-5      -- B = -5
+SUB A, B         -- A = 10 - (-5) = 15
+OUT A            -- Salida: 15
+
+-- Comparación con negativos
+LOAD A, #-5      -- A = -5
+LOAD B, #-10     -- B = -10
+CMP A, B         -- Compara -5 vs -10 (A > B, resultado positivo)
+
+LOAD C, #-5      -- C = -5
+LOAD D, #5       -- D = 5
+CMP C, D         -- Compara -5 vs 5 (C < D, resultado negativo, NF=1)
+
+-- Valor más negativo y más positivo
+LOAD A, #-2048   -- A = -2048 (mínimo en 12 bits con signo)
+OUT A
+
+LOAD B, #2047    -- B = 2047 (máximo en 12 bits con signo)
+OUT B
+
+HALT
+NOP
