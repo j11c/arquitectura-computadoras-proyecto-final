@@ -3,7 +3,7 @@ import sys
 
 # Mapeo de nemónicos a COOP (4 bits)
 COOP = {
-    'HALT': '0000',
+    'NOP':  '0000',
     'ADD':  '0001',
     'SUB':  '0010',
     'MUL':  '0011',
@@ -21,7 +21,7 @@ COOP = {
     'OUT':  '1100',
     'JMP':  '1101',
     'ILOAD':'1110',
-    'NOP':  '1111',
+    'HALT': '1111',
     'JGT':  '1101',
     'JEQ':  '1101',
     'JLT':  '1101'
@@ -64,12 +64,20 @@ def parse_operand(operand):
     if operand.startswith('#'):
         try:
             imm = int(operand[1:])
-            if 0 <= imm <= 4095:
+            
+            # Validar rango para complemento a 2 de 12 bits: -2048 a 2047
+            if -2048 <= imm <= 2047:
+                # Convertir a complemento a 2 si es negativo
+                if imm < 0:
+                    imm = (1 << 12) + imm  # 4096 + imm (complemento a 2)
                 return ('imm', format(imm, '012b'))
             else:
-                raise ValueError(f"Inmediato fuera de rango: {operand}")
-        except ValueError:
-            raise ValueError(f"Inmediato inválido: {operand}")
+                raise ValueError(f"Inmediato fuera de rango (-2048 a 2047): {operand}")
+        except ValueError as e:
+            if "invalid literal" in str(e):
+                raise ValueError(f"Inmediato inválido: {operand}")
+            else:
+                raise
     
     raise ValueError(f"Operando no reconocido: {operand}")
 
@@ -92,6 +100,14 @@ def get_modo_bits(mnemonic, dest_type, src_type):
         return '00'  # IN usa modo 00 (bit izquierdo = 0)
     elif mnemonic == 'ILOAD':
         return '00'  # ILOAD usa modo 00 para reg-reg indirecto
+    elif mnemonic == 'JMP':
+        return '00'  # JMP incondicional usa modo 00
+    elif mnemonic == 'JGT':
+        return '10'  # JGT (greater than) usa modo 10
+    elif mnemonic == 'JEQ':
+        return '11'  # JEQ (equal) usa modo 11
+    elif mnemonic == 'JLT':
+        return '01'  # JLT (less than) usa modo 01
     
     # Formato estándar de 2 parámetros
     if dest_type == 'reg' and src_type == 'reg':
@@ -156,8 +172,18 @@ def assemble_instruction(line, line_num):
         instructions.append(instruction)
         
     elif src_type == 'none':
-        # Instrucción con 1 operando (NOT, INC, DEC, IN, OUT)
-        if dest_type == 'reg':
+        # Instrucción con 1 operando
+        if mnemonic in ['JMP', 'JGT', 'JEQ', 'JLT']:
+            # JMP's: destino es dirección de memoria
+            if dest_type == 'mem':
+                instruction1 = coop + modo + '0000'
+                instruction2 = dest_val  # Ya es string binario de 10 bits
+                instructions.append(instruction1)
+                instructions.append(instruction2)
+            else:
+                raise ValueError(f"Línea {line_num}: JMP requiere dirección de memoria (0x...)")
+        elif dest_type == 'reg':
+            # NOT, INC, DEC, IN, OUT
             instruction = coop + modo + dest_val + '00'
             instructions.append(instruction)
         else:
@@ -231,14 +257,14 @@ def compile_program(input_file, output_file):
         # Generar salida en formato VHDL
         with open(output_file, 'w', encoding='utf-8') as f:
             for i, instr in enumerate(binary_instructions):
-                f.write(f'"{instr}", -- linea {i+1} / direccion {i}\n')
+                f.write(f'"{instr}", -- linea {i+1} / direccion 0x{i:03X} ({i})\n')
             
             # Rellenar con NOPs hasta 1024 si es necesario
             remaining = 1024 - len(binary_instructions)
             if remaining > 0:
                 for i in range(remaining):
                     addr = len(binary_instructions) + i
-                    f.write(f'"{"1111000000"}", -- linea {addr+1} / direccion {addr} (NOP)\n')
+                    f.write(f'"0000000000", -- linea {addr+1} / direccion 0x{addr:03X} ({addr}) (NOP)\n')
         
         print(f"   Compilación exitosa!")
         print(f"   Entrada: {input_file}")

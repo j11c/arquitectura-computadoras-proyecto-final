@@ -1,0 +1,71 @@
+-- Programa 7: Instrucciones de Salto (JMP, JGT, JEQ, JLT)
+-- Prueba: Todos los tipos de saltos
+
+-- ========================================
+-- Prueba 1: JMP Incondicional
+-- ========================================
+LOAD A, #1       -- Dir 0x000-0x001: A = 1
+JMP 0x007        -- Dir 0x002-0x003: Salta a 0x007
+LOAD A, #99      -- Dir 0x004-0x005: NO se ejecuta (saltado)
+HALT             -- Dir 0x006: NO se ejecuta
+
+-- Target del JMP: Dir 0x007
+LOAD B, #10      -- Dir 0x007-0x008: B = 10 (continúa aquí)
+OUT B            -- Dir 0x009: Salida = 10
+
+-- ========================================
+-- Prueba 2: JGT (Jump if Greater Than)
+-- Cuenta regresiva de 10 a 1
+-- ========================================
+LOAD A, #10      -- Dir 0x00A-0x00B: A = 10 (contador)
+
+-- Loop: Dir 0x00C
+OUT A            -- Dir 0x00C: Salida = A
+LOAD B, #1       -- Dir 0x00D-0x00E: B = 1
+SUB A, B         -- Dir 0x00F: A = A - 1
+CMP A, B         -- Dir 0x010: Compara A vs 1
+JGT 0x00C        -- Dir 0x011-0x012: Si A > 1, salta a 0x00C (loop)
+
+-- Sale del loop cuando A <= 1
+OUT A            -- Dir 0x013: Salida = 1 (último valor)
+
+-- ========================================
+-- Prueba 3: JEQ (Jump if Equal)
+-- Busca el valor 5 incrementando
+-- ========================================
+LOAD C, #0       -- Dir 0x014-0x015: C = 0 (contador)
+LOAD D, #5       -- Dir 0x016-0x017: D = 5 (objetivo)
+
+-- Loop: Dir 0x018
+LOAD B, #1       -- Dir 0x018-0x019: B = 1
+ADD C, B         -- Dir 0x01A: C = C + 1
+CMP C, D         -- Dir 0x01B: Compara C vs 5
+JEQ 0x01F        -- Dir 0x01C-0x01D: Si C == 5, salta a 0x01F (encontrado)
+JMP 0x018        -- Dir 0x01E-0x01F: Vuelve al loop
+
+-- Encontrado: Dir 0x020
+OUT C            -- Dir 0x020: Salida = 5
+
+-- ========================================
+-- Prueba 4: JLT (Jump if Less Than)
+-- Verifica si un número es negativo
+-- ========================================
+LOAD A, #-10     -- Dir 0x021-0x022: A = -10
+LOAD B, #0       -- Dir 0x023-0x024: B = 0
+CMP A, B         -- Dir 0x025: Compara A vs 0
+JLT 0x029        -- Dir 0x026-0x027: Si A < 0, salta a 0x029 (es negativo)
+
+-- Es positivo o cero
+LOAD C, #1       -- Dir 0x028-0x029: C = 1 (NO se ejecuta)
+
+-- Es negativo: Dir 0x029
+LOAD C, #100     -- Dir 0x029-0x02A: C = 100 (bandera negativo)
+
+-- Final: Dir 0x02B
+OUT C            -- Dir 0x02B: Salida = 100 (era negativo)
+
+-- ========================================
+-- Fin del Programa
+-- ========================================
+HALT             -- Dir 0x02C
+NOP              -- Dir 0x02D
