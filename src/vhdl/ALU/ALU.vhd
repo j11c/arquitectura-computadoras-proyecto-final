@@ -50,12 +50,12 @@ begin
                 	unsigned(M1 AND M0) 		when "0101", -- AND
                 	unsigned(M1 OR M0) 			when "0110", -- OR
                 	unsigned(NOT M1) 			when "0111", -- NOT
-                	x"000"				 		when "1000", -- CMP
+                	unsigned(M1) - unsigned(M0)	when "1000", -- CMP
                 	unsigned(M0)	 			when "1001", -- LOAD
                 	temp_inc_dec 				when "1010", -- INC/DEC
                 	temp_shl_shr 				when "1011", -- SHL/SHR
                 	unsigned(M0) 				when "1100", -- IN/OUT
-                	x"000" 						when "1101", -- JMP/JLT/JGT/JEQ
+                	temp_outp					when "1101", -- JMP/JLT/JGT/JEQ
                 	unsigned(M0) 				when "1110", -- ILOAD
                 	x"000" 						when "1111", -- NOP
                 	x"000" 						when others;
