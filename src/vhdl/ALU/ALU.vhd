@@ -31,10 +31,12 @@ architecture arq1 of ALU is
 	signal temp_outp, temp_inc_dec, temp_shl_shr : unsigned(11 downto 0) := (others => '0');
 	signal temp_nfzf 	: std_logic_vector(1 downto 0) := "00";
 	signal mul_result 	: unsigned(23 downto 0) := (others => '0');
+	--signal half_mul_result : unsigned(11 downto 0) := (others => '0');
 begin
 
 	-- Precalculations
 	mul_result 	 <= unsigned(M1) * unsigned(M0);
+	--half_mul_result <= mul_result(11 downto 0);
 	temp_inc_dec <= unsigned(M1) + 1 when modo(1)='0' else 
 					unsigned(M1) - 1;
 	temp_shl_shr <= unsigned(M1(10 downto 0) & '0')   when modo(1) = '0' else
@@ -45,8 +47,8 @@ begin
    	   temp_outp <= x"000" 						when "0000", -- HALT
                 	unsigned(M1) + unsigned(M0) when "0001", -- ADD
                 	unsigned(M1) - unsigned(M0) when "0010", -- SUB
-                	unsigned(M1) * unsigned(M0) when "0011", -- MUL
-                	mul_result(11 downto 0)		when "0100", -- DIV
+                	mul_result(11 downto 0)     when "0011", -- MUL
+                	unsigned(M1) / unsigned(M0)	when "0100", -- DIV
                 	unsigned(M1 AND M0) 		when "0101", -- AND
                 	unsigned(M1 OR M0) 			when "0110", -- OR
                 	unsigned(NOT M1) 			when "0111", -- NOT

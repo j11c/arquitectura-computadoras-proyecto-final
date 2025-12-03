@@ -21,7 +21,8 @@ entity CPU is
 		clk	 	: in  std_logic; 					 	-- Reloj general
 		instr 	: in  std_logic_vector(9 downto 0);  	-- Instrucción
 		inp 	: in  std_logic_vector(11 downto 0); 	-- Entrada de datos del exterior
-		data	: inout std_logic_vector(11 downto 0); 	-- Salida y entrada de datos memoria
+		data_in	: in std_logic_vector(11 downto 0); 	-- Salida y entrada de datos memoria
+		data_out: out std_logic_vector(11 downto 0); 	-- Salida y entrada de datos memoria
 		PAddr 	: out std_logic_vector(9 downto 0);  	-- Dirección de memoria del programa
 		DAddr 	: out std_logic_vector(9 downto 0);  	-- Dirección de memoria de datos
 		RW 		: out std_logic; 					 	-- Escritura o Lectura Memoria de Datos
@@ -68,12 +69,13 @@ architecture arq1 of CPU is
 	end component;
 
 	component RWIO is
-		port( 
-			RW 		: in std_logic;
-			data 	: inout std_logic_vector(11 downto 0);
-			bus_in 	: in 	std_logic_vector(11 downto 0);
-			bus_out : out 	std_logic_vector(11 downto 0)
-		);
+		port(
+            RW      : in std_logic;
+            din     : in std_logic_vector(11 downto 0);
+            dout    : out std_logic_vector(11 downto 0);
+            bus_in  : in  std_logic_vector(11 downto 0);
+            bus_out : out std_logic_vector(11 downto 0)
+        );
 	end component;
 
 	-- ======================
@@ -192,11 +194,14 @@ architecture arq1 of CPU is
 
 	-- LDPC Override signal
 	signal loadPC : std_logic := '0';
+	
+	-- RWIO
+	signal rwio_din, rwio_dout : std_logic_vector(11 downto 0) := (others => '0');
 
 begin
 
 	-- CPU ENABLE/DISABLE
-	halt <= '1' when IR_out(9 downto 6) = "0000" else '0';
+	halt <= '1' when IR_out(9 downto 6) = "1111" else '0'; -- HALT AHORA ES 1111
 	pc_enable <= control_bus(BIT_INCPC) AND NOT(halt);
 
 	-- LDPC Override
@@ -214,7 +219,7 @@ begin
 	-- Señales de selección de los multiplexores
 	MUX0_SEL <= IR_out(4) & IR_out(1 downto 0);
 	MUX1_SEL <= "0" & IR_out(3 downto 2);
-	MMBR_SEL <= "0" & externalInput & IR_out(5);
+	MMBR_SEL <= "0" & externalInput & (IR_out(5) NAND IR_out(4));
 	
 	with IR_out(9 downto 6) select
 		MMAR_SEL <= '1' when "1110",
@@ -226,6 +231,8 @@ begin
 	-- CPU Outputs
 	pAddr <= PMA_out;
 	DAddr <= MAR_out;
+	rwio_din <= data_in;
+	data_out <= rwio_dout;
 	RW <= control_bus(BIT_RW);
 	halted <= halt;
 	outp <= OutReg_out;
@@ -245,7 +252,7 @@ begin
 
 	CU : UnidadControl port map (
 		clk  => clk,
-		instr => instr,
+		instr => IR_out,
 		ctrl => control_bus -- señales de control
 	);
 
@@ -260,7 +267,8 @@ begin
 
 	URWIO : RWIO port map (
 		RW 		=> control_bus(BIT_RW),
-		data 	=> memory_data,
+		din     => rwio_din,
+		dout 	=> rwio_dout, -- memory_data,
 		bus_in 	=> data_bus,
 		bus_out => RWIO_out
 	);
@@ -348,7 +356,7 @@ begin
 		A0  => immediate_input,
 		A1  => RWIO_out,
 		A2  => inp,
-		A3  => x"000",
+		A3  => inp,
 		A4  => x"000",
 		A5  => x"000",
 		A6  => x"000",
