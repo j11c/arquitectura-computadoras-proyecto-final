@@ -19,9 +19,9 @@ use IEEE.numeric_std.all;     -- Para unsigned
 entity Mux2_1 is
     port(
 		SEL  : in  std_logic;
-        A0   : in  std_logic_vector(11 downto 0);
-        A1   : in  std_logic_vector(11 downto 0);
-        S    : out std_logic_vector(11 downto 0)
+        A0   : in  std_logic_vector(9 downto 0);
+        A1   : in  std_logic_vector(9 downto 0);
+        S    : out std_logic_vector(9 downto 0)
     );
 end Mux2_1;
 
@@ -31,6 +31,6 @@ begin
 	with SEL select
 		S <= A0 when '0',
 			 A1 when '1',	
-			 x"000" when others;
+			 "0000000000" when others;
 
 end arq1;

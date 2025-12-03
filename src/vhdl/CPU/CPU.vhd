@@ -21,10 +21,13 @@ entity CPU is
 		clk	 	: in  std_logic; 					 	-- Reloj general
 		instr 	: in  std_logic_vector(9 downto 0);  	-- Instrucción
 		inp 	: in  std_logic_vector(11 downto 0); 	-- Entrada de datos del exterior
-		data	: inout std_logic_vector(11 downto 0); 	-- Salida y entrada de datos memoria
+		data_in	: in std_logic_vector(11 downto 0); 	-- Salida y entrada de datos memoria
+		data_out: out std_logic_vector(11 downto 0); 	-- Salida y entrada de datos memoria
 		PAddr 	: out std_logic_vector(9 downto 0);  	-- Dirección de memoria del programa
 		DAddr 	: out std_logic_vector(9 downto 0);  	-- Dirección de memoria de datos
 		RW 		: out std_logic; 					 	-- Escritura o Lectura Memoria de Datos
+		--await	: out std_logic;						-- Awaiting External input
+		halted	: out std_logic;						-- Signals when CPU is halted
 		outp 	: out std_logic_vector(11 downto 0)  	-- Salida de datos al exterior
 	);
 end CPU;
@@ -48,14 +51,14 @@ architecture arq1 of CPU is
 
 	component UnidadControl is
 		port(
-			clk : in std_logic;
-			ctrl : out std_logic_vector(12 downto 0)
+			clk 	: in std_logic;
+			instr 	: in std_logic_vector(9 downto 0);
+			ctrl 	: out std_logic_vector(12 downto 0)
 		);
 	end component;
 
 	component ALU is
 		port(
-			clk  : in  std_logic;
 			M0 	 : in  std_logic_vector(11 downto 0); -- Fuente
 			M1 	 : in  std_logic_vector(11 downto 0); -- Destino
 			COOP : in  std_logic_vector(3 downto 0);
@@ -66,12 +69,13 @@ architecture arq1 of CPU is
 	end component;
 
 	component RWIO is
-		port( 
-			RW 		: in std_logic;
-			data 	: inout std_logic_vector(11 downto 0);
-			bus_in 	: in 	std_logic_vector(11 downto 0);
-			bus_out : out 	std_logic_vector(11 downto 0)
-		);
+		port(
+            RW      : in std_logic;
+            din     : in std_logic_vector(11 downto 0);
+            dout    : out std_logic_vector(11 downto 0);
+            bus_in  : in  std_logic_vector(11 downto 0);
+            bus_out : out std_logic_vector(11 downto 0)
+        );
 	end component;
 
 	-- ======================
@@ -140,7 +144,7 @@ architecture arq1 of CPU is
 	-- ======================
 
 	-- Salidas registros 12 bits
-	signal A_out, B_out, C_out, D_out 	: std_logic_vector(11 downto 0) := (others => '0');
+	signal A_out, B_out, C_out, D_out, OutReg_out 	: std_logic_vector(11 downto 0) := (others => '0');
 	signal MBR_out 						: std_logic_vector(11 downto 0) := (others => '0');
 
 	-- Salidas registros 10 bits
@@ -188,11 +192,24 @@ architecture arq1 of CPU is
 	-- Entrada MMBR: Dato Inmediato
 	signal immediate_input : std_logic_vector(11 downto 0) := (others => '0');
 
+	-- LDPC Override signal
+	signal loadPC : std_logic := '0';
+	
+	-- RWIO
+	signal rwio_din, rwio_dout : std_logic_vector(11 downto 0) := (others => '0');
+
 begin
 
 	-- CPU ENABLE/DISABLE
-	halt <= '1' when IR_out(9 downto 6) = "0000" else '0';
+	halt <= '1' when IR_out(9 downto 6) = "1111" else '0'; -- HALT AHORA ES 1111
 	pc_enable <= control_bus(BIT_INCPC) AND NOT(halt);
+
+	-- LDPC Override
+	loadPC <= '1' when IR_out(9 downto 4) = "110100" AND control_bus(BIT_LDPC) = '1' 				 else -- JMP
+			  '1' when IR_out(9 downto 4) = "110101" AND NFZF = "10" AND control_bus(BIT_LDPC) = '1' else -- JLT
+			  '1' when IR_out(9 downto 4) = "110110" AND NFZF = "00" AND control_bus(BIT_LDPC) = '1' else -- JGT
+			  '1' when IR_out(9 downto 4) = "110111" AND NFZF = "01" AND control_bus(BIT_LDPC) = '1' else -- JEQ
+			  '0';
 
 	-- Bit auxiliar para selección MMBR: Activado cuando COOP es IN (11000)
 	with IR_out(9 downto 5) select 
@@ -202,7 +219,7 @@ begin
 	-- Señales de selección de los multiplexores
 	MUX0_SEL <= IR_out(4) & IR_out(1 downto 0);
 	MUX1_SEL <= "0" & IR_out(3 downto 2);
-	MMBR_SEL <= "0" & externalInput & IR_out(5);
+	MMBR_SEL <= "0" & externalInput & (IR_out(5) NAND IR_out(4));
 	
 	with IR_out(9 downto 6) select
 		MMAR_SEL <= '1' when "1110",
@@ -210,6 +227,15 @@ begin
 	
 	-- Build immediate input
 	immediate_input <= IR_out(1 downto 0) & instr;
+
+	-- CPU Outputs
+	pAddr <= PMA_out;
+	DAddr <= MAR_out;
+	rwio_din <= data_in;
+	data_out <= rwio_dout;
+	RW <= control_bus(BIT_RW);
+	halted <= halt;
+	outp <= OutReg_out;
 
 	-- ======================
 	-- Componentes Especiales 
@@ -219,13 +245,14 @@ begin
 		clk 	 => clk,
 		reset 	 => '0',
 		enable 	 => pc_enable,
-		load 	 => control_bus(BIT_LDPC), 
+		load 	 => loadPC, 
 		jmp_addr => instr,
 		pc_out 	 => pc_out
 	);
 
 	CU : UnidadControl port map (
 		clk  => clk,
+		instr => IR_out,
 		ctrl => control_bus -- señales de control
 	);
 
@@ -240,7 +267,8 @@ begin
 
 	URWIO : RWIO port map (
 		RW 		=> control_bus(BIT_RW),
-		data 	=> memory_data,
+		din     => rwio_din,
+		dout 	=> rwio_dout, -- memory_data,
 		bus_in 	=> data_bus,
 		bus_out => RWIO_out
 	);
@@ -272,7 +300,7 @@ begin
 
 	MBR : reg12 port map (
 		CLK 	 => clk,
-		LOAD 	 => control_bus(BIT_LDMBR),
+		LOAD 	 => control_bus(BIT_LDMBR), -- Falta cambiar esta señal y modificar la unidad de control para que espere una entrada (que sea diferente de x"FFF")
 		dato_in  => MMBR_out,
 		dato_out => MBR_out
 	);
@@ -309,7 +337,7 @@ begin
 		CLK 	 => clk,
 		LOAD 	 => control_bus(BIT_LDOUT),
 		dato_in  => data_bus,
-		dato_out => outp
+		dato_out => OutReg_out
 	);
 
 	-- ======================
@@ -328,7 +356,7 @@ begin
 		A0  => immediate_input,
 		A1  => RWIO_out,
 		A2  => inp,
-		A3  => x"000",
+		A3  => inp,
 		A4  => x"000",
 		A5  => x"000",
 		A6  => x"000",

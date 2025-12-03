@@ -422,7 +422,80 @@ architecture arq1 of UnidadControl is
 		others => x"0000"
 	);
 
-	-- FALTA ENTRADA Y SALIDA
+	signal HALTNOP : memOper1Param := (
+		-- MODO 00
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000",
+
+		-- MODO 01
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000",
+
+		-- MODO 10
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000",
+
+		-- MODO 11
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000", 
+		x"0100", x"1280", x"0000", x"0000", x"0000", x"0000", x"0000", x"0000",
+		others => x"0000"
+	);
 
 	signal control_signals : std_logic_vector(15 downto 0) := (others => '0');
 	signal microCounter : unsigned(2 downto 0) := (others => '0');
@@ -435,28 +508,24 @@ begin
 	addr <= instr(5 downto 0) & std_logic_vector(microCounter);
 	
 	with coop select control_signals <= 
-		Oper2Param(to_integer(unsigned(addr))) when "0001", -- ADD
-		Oper2Param(to_integer(unsigned(addr))) when "0010", -- SUB
-		Oper2Param(to_integer(unsigned(addr))) when "0011", -- MUL
-		Oper2Param(to_integer(unsigned(addr))) when "0100", -- DIV
-		Oper2Param(to_integer(unsigned(addr))) when "0101", -- AND
-		Oper2Param(to_integer(unsigned(addr))) when "0110", -- OR
-		Oper2Param(to_integer(unsigned(addr))) when "1001", -- LOAD
-
-		Comparacion(to_integer(unsigned(addr))) when "1000", -- CMP
-
-		Oper1Param(to_integer(unsigned(addr))) when "0111", -- NOT
-		Oper1Param(to_integer(unsigned(addr))) when "1010", -- INC/DEC
-		Oper1Param(to_integer(unsigned(addr))) when "1011", -- SHL/SHR
-
+		HALTNOP(to_integer(unsigned(addr))) 	when "0000",	-- HALT/NOP
+		Oper2Param(to_integer(unsigned(addr))) 	when "0001", 	-- ADD
+		Oper2Param(to_integer(unsigned(addr))) 	when "0010", 	-- SUB
+		Oper2Param(to_integer(unsigned(addr))) 	when "0011", 	-- MUL
+		Oper2Param(to_integer(unsigned(addr))) 	when "0100", 	-- DIV
+		Oper2Param(to_integer(unsigned(addr))) 	when "0101", 	-- AND
+		Oper2Param(to_integer(unsigned(addr))) 	when "0110", 	-- OR
+		Oper1Param(to_integer(unsigned(addr))) 	when "0111", 	-- NOT
+		Comparacion(to_integer(unsigned(addr))) when "1000", 	-- CMP
+		Oper2Param(to_integer(unsigned(addr))) 	when "1001", 	-- LOAD
+		Oper1Param(to_integer(unsigned(addr))) 	when "1010", 	-- INC/DEC
+		Oper1Param(to_integer(unsigned(addr))) 	when "1011", 	-- SHL/SHR
 		EntradaYSalida(to_integer(unsigned(addr))) when "1100", -- IN/OUT
-
-		Saltos(to_integer(unsigned(addr))) when "1101",
-
-		Indirecto(to_integer(unsigned(addr))) when "1110",
+		Saltos(to_integer(unsigned(addr))) 		when "1101",	-- JMP/JLT/JGT/JEQ
+		Indirecto(to_integer(unsigned(addr))) 	when "1110",	-- ILOAD
 		x"0000" when others;
 
-	process (clk, Instr, control_signals, addr)
+	process (clk, instr, control_signals, addr)
 	begin
 		ctrl <= control_signals(12 downto 0);
 		if rising_edge(clk) then
