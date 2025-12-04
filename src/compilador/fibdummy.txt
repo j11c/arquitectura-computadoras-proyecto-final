@@ -1,0 +1,32 @@
+LOAD A, #0 
+LOAD B, #1 
+LOAD C, #0
+
+ADD C, A 
+ADD C, B -- 1 
+
+LOAD A, B
+LOAD B, C 
+LOAD C, A 
+ADD C, B -- 2
+
+LOAD A, B
+LOAD B, C 
+LOAD C, A 
+ADD C, B -- 3
+
+LOAD A, B
+LOAD B, C 
+LOAD C, A 
+ADD C, B -- 5
+
+LOAD A, B
+LOAD B, C 
+LOAD C, A 
+ADD C, B -- 8
+
+OUT C
+
+HALT
+
+
