@@ -1,0 +1,45 @@
+-- Y = 2x^2 + 5x + 3, con x = 8
+
+-- x y constantes en memoria
+LOAD A, #8
+LOAD 0x010, A
+LOAD B, #2
+LOAD 0x001, B
+LOAD B, #5
+LOAD 0x002, B
+LOAD B, #3
+LOAD 0x003, B
+
+-- x^2
+LOAD A, 0x010
+MUL A, A
+LOAD 0x011, A
+
+-- 2x^2
+LOAD A, 0x011
+LOAD B, 0x001
+MUL A, B
+LOAD 0x012, A
+
+-- 5x
+LOAD A, 0x010
+LOAD B, 0x002
+MUL A, B
+LOAD 0x013, A
+
+-- 2x^2 + 5x
+LOAD A, 0x012
+LOAD B, 0x013
+ADD A, B
+LOAD 0x014, A
+
+-- +3
+LOAD B, 0x003
+ADD A, B
+LOAD 0x015, A
+
+-- salida
+OUT A
+HALT
+NOP
+

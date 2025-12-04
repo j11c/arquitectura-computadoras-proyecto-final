@@ -1,0 +1,21 @@
+-- Programa: Factorial de 5
+-- Objetivo: calcular 5! = 120 y sacarlo por OUT
+
+LOAD B, #01      -- B = 1  (acumulador del resultado)
+
+LOAD A, #02      -- A = 2
+MUL  B, A        -- B = 1 * 2 = 2
+
+LOAD A, #03      -- A = 3
+MUL  B, A        -- B = 2 * 3 = 6
+
+LOAD A, #04      -- A = 4
+MUL  B, A        -- B = 6 * 4 = 24
+
+LOAD A, #05      -- A = 5
+MUL  B, A        -- B = 24 * 5 = 120
+
+OUT B            -- Muestra 120 en el puerto de salida
+
+HALT
+NOP
